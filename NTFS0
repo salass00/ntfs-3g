@@ -1,0 +1,21 @@
+/* Example DOSDriver for ntfs3g-handler.
+ * This is for a 500GB MBR-less USB harddrive formatted as NTFS.
+ *
+ * - When LowCyl is 0 HighCyl is ignored and the entire disk size as reported by
+ *   TD_GETGEOMETRY is used instead.
+ *
+ * - Control can be specified with the ro option for a read-only mount.
+ */
+FileSystem     = ntfs3g-handler
+DosType        = 0x4e544653
+Device         = usbscsi.device
+Unit           = 0
+BlockSize      = 512
+Surfaces       = 1
+BlocksPerTrack = 1
+LowCyl         = 0
+HighCyl        = 976773166
+Reserved       = 0
+/* Control        = ro */
+Activate       = 1
+
