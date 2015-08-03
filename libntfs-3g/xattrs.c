@@ -1,7 +1,7 @@
 /**
  * xattrs.c : common functions to deal with system extended attributes
  *
- * Copyright (c) 2010 Jean-Pierre Andre
+ * Copyright (c) 2010-2014 Jean-Pierre Andre
  *
  * This program/include file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published
@@ -55,6 +55,7 @@
 #include "efs.h"
 #include "reparse.h"
 #include "object_id.h"
+#include "ea.h"
 #include "misc.h"
 #include "logging.h"
 #include "xattrs.h"
@@ -97,6 +98,7 @@ static const char nf_ns_xattr_times[] = "system.ntfs_times";
 static const char nf_ns_xattr_times_be[] = "system.ntfs_times_be";
 static const char nf_ns_xattr_crtime[] = "system.ntfs_crtime";
 static const char nf_ns_xattr_crtime_be[] = "system.ntfs_crtime_be";
+static const char nf_ns_xattr_ea[] = "system.ntfs_ea";
 static const char nf_ns_xattr_posix_access[] = "system.posix_acl_access";
 static const char nf_ns_xattr_posix_default[] = "system.posix_acl_default";
 
@@ -119,6 +121,7 @@ static struct XATTRNAME nf_ns_xattr_names[] = {
 	{ XATTR_NTFS_TIMES_BE, nf_ns_xattr_times_be },
 	{ XATTR_NTFS_CRTIME, nf_ns_xattr_crtime },
 	{ XATTR_NTFS_CRTIME_BE, nf_ns_xattr_crtime_be },
+	{ XATTR_NTFS_EA, nf_ns_xattr_ea },
 	{ XATTR_POSIX_ACC, nf_ns_xattr_posix_access },
 	{ XATTR_POSIX_DEF, nf_ns_xattr_posix_default },
 	{ XATTR_UNMAPPED, (char*)NULL } /* terminator */
@@ -239,7 +242,7 @@ enum SYSTEMXATTRS ntfs_xattr_system_type(const char *name,
  *		Basic read from a user mapping file on another volume
  */
 
-static int basicread(void *fileid, char *buf, size_t size, off_t offs __attribute__((unused)))
+static int basicread(void *fileid, char *buf, size_t size, fbx_off_t offs __attribute__((unused)))
 {
 	return (read(*(int*)fileid, buf, size));
 }
@@ -249,7 +252,7 @@ static int basicread(void *fileid, char *buf, size_t size, off_t offs __attribut
  *		Read from a user mapping file on current NTFS partition
  */
 
-static int localread(void *fileid, char *buf, size_t size, off_t offs)
+static int localread(void *fileid, char *buf, size_t size, fbx_off_t offs)
 {
 	return (ntfs_attr_data_read((ntfs_inode*)fileid,
 			AT_UNNAMED, 0, buf, size, offs));
@@ -266,7 +269,7 @@ static int localread(void *fileid, char *buf, size_t size, off_t offs)
  */
 
 static struct XATTRMAPPING *getmappingitem(FILEREADER reader, void *fileid,
-		off_t *poffs, char *buf, int *psrc, s64 *psize)
+		fbx_off_t *poffs, char *buf, int *psrc, s64 *psize)
 {
 	int src;
 	int dst;
@@ -363,13 +366,13 @@ static struct XATTRMAPPING *ntfs_read_xattr_mapping(FILEREADER reader,
 	struct XATTRMAPPING *lastitem;
 	BOOL duplicated;
 	int src;
-	off_t offs;
+	fbx_off_t offs;
 	s64 size;
 
 	firstitem = (struct XATTRMAPPING*)NULL;
 	lastitem = (struct XATTRMAPPING*)NULL;
 	offs = 0;
-	size = reader(fileid, buf, (size_t)BUFSZ, (off_t)0);
+	size = reader(fileid, buf, (size_t)BUFSZ, (fbx_off_t)0);
 	if (size > 0) {
 		src = 0;
 		do {
@@ -472,7 +475,6 @@ void ntfs_xattr_free_mapping(struct XATTRMAPPING *mapping)
 }
 
 #endif /* XATTR_MAPPINGS */
-
 
 int ntfs_xattr_system_getxattr(struct SECURITY_CONTEXT *scx,
 			enum SYSTEMXATTRS attr,
@@ -588,6 +590,9 @@ int ntfs_xattr_system_getxattr(struct SECURITY_CONTEXT *scx,
 				(size >= sizeof(u64) ? sizeof(u64) : size));
 		if ((res >= (int)sizeof(u64)) && value)
 			fix_big_endian(value,sizeof(u64));
+		break;
+	case XATTR_NTFS_EA :
+		res = ntfs_get_ntfs_ea(ni, value, size);
 		break;
 	default :
 		errno = EOPNOTSUPP;
@@ -712,6 +717,9 @@ int ntfs_xattr_system_setxattr(struct SECURITY_CONTEXT *scx,
 		} else
 			res = ntfs_inode_set_times(ni, value, size, flags);
 		break;
+	case XATTR_NTFS_EA :
+		res = ntfs_set_ntfs_ea(ni, value, size, flags);
+		break;
 	default :
 		errno = EOPNOTSUPP;
 		res = -errno;
@@ -779,6 +787,9 @@ int ntfs_xattr_system_removexattr(struct SECURITY_CONTEXT *scx,
 			/* ni and dir_ni have been closed */
 		} else
 			res = -errno;
+		break;
+	case XATTR_NTFS_EA :
+		res = ntfs_remove_ntfs_ea(ni);
 		break;
 	default :
 		errno = EOPNOTSUPP;

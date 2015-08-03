@@ -320,13 +320,13 @@
 #define PACKAGE_NAME "ntfs-3g"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "ntfs-3g 2014.2.15"
+#define PACKAGE_STRING "ntfs-3g 2015.3.14"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "ntfs-3g"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2014.2.15"
+#define PACKAGE_VERSION "2015.3.14"
 
 /* POSIX ACL support */
 /* #undef POSIXACLS */
@@ -335,7 +335,7 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "2014.2.15"
+#define VERSION "2015.3.14"
 
 /* Define to 1 if this is a Windows OS */
 /* #undef WINDOWS */

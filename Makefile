@@ -27,6 +27,7 @@ LIBNTFS3G_OBJS := \
 	libntfs-3g/attrib.o \
 	libntfs-3g/cache.o \
 	libntfs-3g/dir.o \
+	libntfs-3g/ea.o \
 	libntfs-3g/efs.o \
 	libntfs-3g/index.o \
 	libntfs-3g/inode.o \
