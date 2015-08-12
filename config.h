@@ -346,7 +346,7 @@
 
 /* Define to 1 if your processor stores words with the least significant byte
    first (like Intel and VAX, unlike Motorola and SPARC). */
-#define WORDS_LITTLEENDIAN 1
+/* #undef WORDS_LITTLEENDIAN */
 
 /* system extended attributes mappings */
 /* #undef XATTR_MAPPINGS */
