@@ -74,7 +74,11 @@ static int ntfs_device_amiga_io_open(struct ntfs_device *dev, int flags) {
 		goto error;
 	}
 
+#ifdef __AROS__
 	if (strcmp(EXEC_NAME, "ntfs3g-handler") == 0) {
+#else
+	if (strcmp(EXEC_NAME, "NTFileSystem3G") == 0) {
+#endif
 		data->diskio = DIO_Setup((CONST_STRPTR)dev->d_name, NULL);
 	} else {
 		data->diskio = DIO_SetupTags((CONST_STRPTR)dev->d_name,

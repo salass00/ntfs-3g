@@ -41,7 +41,7 @@
 #endif
 
 #include <getopt.h>
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 #include <proto/exec.h>
 #include <proto/filesysbox.h>
 #else
@@ -549,7 +549,7 @@ err_exit:
 	goto exit;
 }
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 /**
  * parse_options - Read and validate the programs command line
  * Read the command line, verify the syntax and parse the options.
@@ -648,7 +648,7 @@ int ntfs_parse_options(struct ntfs_options *popts, void (*usage)(void),
 
 	return 0;
 }
-#endif
+#endif /* !defined(__AROS__) && !defined(AMIGA) */
 
 #ifdef HAVE_SETXATTR
 

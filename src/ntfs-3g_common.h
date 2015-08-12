@@ -29,7 +29,7 @@ struct ntfs_options {
 	char    *mnt_point;     /* Mount point */    
 	char    *options;       /* Mount options */  
 	char    *device;        /* Device to mount */
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 	char	*arg_device;	/* Device requested in argv */
 #endif
 } ;
@@ -178,7 +178,7 @@ int ntfs_strappend(char **dest, const char *append);
 int ntfs_strinsert(char **dest, const char *append);
 char *parse_mount_options(ntfs_fuse_context_t *ctx,
 			const struct ntfs_options *popts, BOOL low_fuse);
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 int ntfs_parse_options(struct ntfs_options *popts, void (*usage)(void),
 			int argc, char *argv[]);
 #endif

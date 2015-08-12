@@ -1724,11 +1724,11 @@ int ntfs_volume_error(int err)
 		case 0:
 			ret = NTFS_VOLUME_OK;
 			break;
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 		case ENODEV:
 			ret = NTFS_VOLUME_NO_DISK;
 			break;
-#endif
+#endif /* defined(__AROS__) || defined(AMIGA) */
 		case EINVAL:
 			ret = NTFS_VOLUME_NOT_NTFS;
 			break;

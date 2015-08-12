@@ -27,7 +27,7 @@
 #include "config.h"
 #endif
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 #include <libraries/filesysbox.h>
 #endif
 

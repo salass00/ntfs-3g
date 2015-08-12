@@ -27,14 +27,14 @@
 
 #include "config.h"
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 #include <dos/dos.h>
 #include <proto/exec.h>
 #include <proto/filesysbox.h>
 static struct fuse_context *_fuse_context_;
 #else
 #include <fuse.h>
-#endif /* __AROS__ */
+#endif /* defined(__AROS__) || defined(AMIGA) */
 
 #if !defined(FUSE_VERSION) || (FUSE_VERSION < 26)
 #error "***********************************************************"
@@ -158,8 +158,10 @@ enum {
 
 struct ntfs_options opts;
 
-#ifdef __AROS__
+#if defined(__AROS__)
 const char *EXEC_NAME = "ntfs3g-handler";
+#elif defined(AMIGA)
+const char *EXEC_NAME = "NTFileSystem3G";
 #else
 const char *EXEC_NAME = "ntfs-3g";
 #endif
@@ -167,7 +169,7 @@ const char *EXEC_NAME = "ntfs-3g";
 ntfs_fuse_context_t *ctx;
 static u32 ntfs_sequence;
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 static const char *usage_msg = 
 "\n"
 "%s %s %s %d - Third Generation NTFS Driver\n"
@@ -197,11 +199,11 @@ static const char *usage_msg =
 "Example: ntfs-3g /dev/sda1 /mnt/windows\n"
 "\n"
 "%s";
-#endif
+#endif /* !defined(__AROS__) && !defined(AMIGA) */
 
 static const char ntfs_bad_reparse[] = "unsupported reparse point";
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 #ifdef FUSE_INTERNAL
 int drop_privs(void);
 int restore_privs(void);
@@ -228,7 +230,7 @@ static const char *unpriv_fuseblk_msg =
 "FUSE support and make it setuid root. Please see more information at\n"
 "http://tuxera.com/community/ntfs-3g-faq/#unprivileged\n";
 #endif	
-#endif
+#endif /* !defined(__AROS__) && !defined(AMIGA) */
 
 
 /**
@@ -514,12 +516,12 @@ static int ntfs_fuse_statfs(const char *path __attribute__((unused)),
 	/* Maximum length of filenames. */
 	sfs->f_namemax = NTFS_MAX_NAME_LEN;
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 	/* flags */
 	sfs->f_flag = ST_CASE_SENSITIVE;
 	if (ctx->ro || NVolReadOnly(vol))
 		sfs->f_flag |= ST_RDONLY;
-#endif
+#endif /* defined(__AROS__) || defined(AMIGA) */
 
 	return 0;
 }
@@ -667,7 +669,7 @@ int ntfs_macfuse_setchgtime(const char *path, const struct timespec *tv)
 }
 #endif /* defined(__APPLE__) || defined(__DARWIN__) */
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 static void *ntfs_init(struct fuse_conn_info *conn)
 {
 #if defined(__APPLE__) || defined(__DARWIN__)
@@ -685,7 +687,7 @@ static void *ntfs_init(struct fuse_conn_info *conn)
 #endif
 	return NULL;
 }
-#endif
+#endif /* !defined(__AROS__) && !defined(AMIGA) */
 
 static int ntfs_fuse_getattr(const char *org_path, struct fbx_stat *stbuf)
 {
@@ -2343,7 +2345,7 @@ static int ntfs_fuse_utimens(const char *path, const struct timespec tv[2])
 	if (!ni)
 		return -errno;
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 			/* no UTIME_NOW or UTIME_OMIT */
 #if !KERNELPERMS | (POSIXACLS & !KERNELACLS)
 	if (ntfs_allowed_as_owner(&security, ni)) {
@@ -3432,11 +3434,11 @@ static void ntfs_fuse_destroy2(void *unused __attribute__((unused)))
 	ntfs_close();
 }
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 int ntfs_amifuse_format(const char *label, ULONG dostype);
 int ntfs_amifuse_relabel(const char *label);
 static void * ntfs_amifuse_init(struct fuse_conn_info *conn);
-#endif
+#endif /* defined(__AROS__) || defined(AMIGA) */
 
 static const struct fuse_operations ntfs_3g_ops = {
 	.getattr	= ntfs_fuse_getattr,
@@ -3488,7 +3490,7 @@ static const struct fuse_operations ntfs_3g_ops = {
 	.setbkuptime	= ntfs_macfuse_setbkuptime,
 	.setchgtime	= ntfs_macfuse_setchgtime,
 #endif /* defined(__APPLE__) || defined(__DARWIN__) */
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 	.format		= ntfs_amifuse_format,
 	.relabel	= ntfs_amifuse_relabel,
 	.init		= ntfs_amifuse_init
@@ -3506,12 +3508,12 @@ static int ntfs_fuse_init(void)
 	*ctx = (ntfs_fuse_context_t) {
 		.uid     = getuid(),
 		.gid     = getgid(),
-#if defined(linux) || defined(__AROS__)
+#if defined(linux) || defined(__AROS__) || defined(AMIGA)
 		.streams = NF_STREAMS_INTERFACE_XATTR,
 #else			
 		.streams = NF_STREAMS_INTERFACE_NONE,
 #endif			
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 		.atime   = ATIME_DISABLED,
 #else
 		.atime   = ATIME_RELATIVE,
@@ -3580,7 +3582,7 @@ err_out:
 	
 }
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 static void usage(void)
 {
 	ntfs_log_info(usage_msg, EXEC_NAME, VERSION, FUSE_TYPE, fuse_version(),
@@ -3700,7 +3702,7 @@ static fuse_fstype load_fuse_module(void)
 
 #endif
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 static struct fuse_chan *try_fuse_mount(char *parsed_options)
 {
 	struct fuse_chan *fc = NULL;
@@ -3741,7 +3743,7 @@ static int set_fuseblk_options(char **parsed_options)
 	return 0;
 }
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 static struct fuse *mount_fuse(char *parsed_options)
 {
 	struct fuse *fh = NULL;
@@ -3799,7 +3801,7 @@ static void setup_logging(char *parsed_options)
 	ctx->seccache = (struct PERMISSIONS_CACHE*)NULL;
 
 	ntfs_log_info("Version %s %s %d\n", VERSION, FUSE_TYPE, fuse_version());
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 	if (strcmp(opts.arg_device,opts.device))
 		ntfs_log_info("Requested device %s canonicalized as %s\n",
 				opts.arg_device,opts.device);
@@ -3812,7 +3814,7 @@ static void setup_logging(char *parsed_options)
 	ntfs_log_info("Mount options: %s\n", parsed_options);
 }
 
-#ifndef __AROS__
+#if !defined(__AROS__) && !defined(AMIGA)
 int main(int argc, char *argv[])
 {
 	char *parsed_options = NULL;
@@ -4079,7 +4081,7 @@ err2:
 }
 #endif
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 static void * ntfs_amifuse_init(struct fuse_conn_info *conn) {
 	const char *permissions_mode = NULL;
 	const char *failed_secure = NULL;
@@ -4263,5 +4265,5 @@ err2:
 
 	return err;
 }
-#endif
+#endif /* defined(__AROS__) || defined(AMIGA) */
 

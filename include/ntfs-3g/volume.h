@@ -82,7 +82,7 @@ typedef enum {
 extern int ntfs_check_if_mounted(const char *file, unsigned long *mnt_flags);
 
 typedef enum {
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 	NTFS_VOLUME_NO_DISK			= -1,
 #endif
 	NTFS_VOLUME_OK				= 0,

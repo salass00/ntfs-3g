@@ -34,7 +34,7 @@
 #undef HAVE_WINDOWS_H
 #endif
 
-#if !defined(HAVE_WINDOWS_H) && !defined(__AROS__)
+#if !defined(HAVE_WINDOWS_H) && !defined(__AROS__) && !defined(AMIGA)
 
 /* Not for Windows use standard Unix style low level device operations. */
 #define ntfs_device_default_io_ops ntfs_device_unix_io_ops
@@ -66,7 +66,7 @@ struct hd_geometry {
 #	define BLKBSZSET	0x40041271
 #endif
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 #define ntfs_device_default_io_ops ntfs_device_amiga_io_ops
 #else
 /* On Windows (and Cygwin) : use Win32 low level device operations. */

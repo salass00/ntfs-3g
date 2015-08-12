@@ -25,7 +25,7 @@
 #ifndef _NTFS_SECURITY_H
 #define _NTFS_SECURITY_H
 
-#ifdef __AROS__
+#if defined(__AROS__) || defined(AMIGA)
 #include <libraries/filesysbox.h>
 #endif
 
