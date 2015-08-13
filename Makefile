@@ -128,5 +128,6 @@ dist-clean:
 
 .PHONY: revision
 revision:
-	bumprev $(VERSION) $(TARGET)
+	bumprev $(VERSION) NTFileSystem3G
+	bumprev $(VERSION) ntfs3g-handler
 
