@@ -26,9 +26,9 @@ LIBDISKIO  := libdiskio.a
 LIBSUPPORT := libamigaos_support.a
 
 ifeq ($(HOST),m68k-amigaos)
-	TARGET := ntfs3g-handler
-else
 	TARGET := NTFileSystem3G
+else
+	TARGET := ntfs3g-handler
 endif
 VERSION := 53
 
