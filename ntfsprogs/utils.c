@@ -135,6 +135,7 @@ static const char *fakeraid_msg =
  */
 int utils_set_locale(void)
 {
+#ifdef HAVE_SETLOCALE
 	const char *locale;
 
 	locale = setlocale(LC_ALL, "");
@@ -143,9 +144,9 @@ int utils_set_locale(void)
 		ntfs_log_error("Failed to set locale, using default '%s'.\n",
 				locale);
 		return 1;
-	} else {
-		return 0;
 	}
+#endif
+	return 0;
 }
 
 /**

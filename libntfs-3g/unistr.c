@@ -1515,6 +1515,7 @@ BOOL ntfs_collapsible_chars(ntfs_volume *vol,
 
 int ntfs_set_char_encoding(const char *locale)
 {
+#ifdef HAVE_SETLOCALE
 	use_utf8 = 0;
 	if (!locale || strstr(locale,"utf8") || strstr(locale,"UTF8")
 	    || strstr(locale,"utf-8") || strstr(locale,"UTF-8"))
@@ -1526,6 +1527,7 @@ int ntfs_set_char_encoding(const char *locale)
 			ntfs_log_error("Invalid locale, encoding to UTF-8\n");
 			use_utf8 = 1;
 	 	}
+#endif
 	return 0; /* always successful */
 }
 

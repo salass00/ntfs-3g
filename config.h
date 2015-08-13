@@ -41,7 +41,7 @@
 #define HAVE_CTYPE_H 1
 
 /* Define to 1 if you have the `daemon' function. */
-/* #undef HAVE_DAEMON */
+#define HAVE_DAEMON 1
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #define HAVE_DLFCN_H 1
@@ -152,7 +152,9 @@
 /* #undef HAVE_REGEX_H */
 
 /* Define to 1 if you have the `setlocale' function. */
+#ifdef __AROS__
 #define HAVE_SETLOCALE 1
+#endif
 
 /* Define to 1 if you have the `setxattr' function. */
 #define HAVE_SETXATTR 1

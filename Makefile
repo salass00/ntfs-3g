@@ -62,6 +62,7 @@ LIBNTFS3G_OBJS := \
 	libntfs-3g/security.o \
 	libntfs-3g/realpath.o \
 	libntfs-3g/xattrs.o \
+	libntfs-3g/compat.o \
 	libntfs-3g/amiga_io.o
 
 LIBDISKIO_OBJS := \
@@ -96,7 +97,6 @@ OBJS := \
 	ntfsprogs/sd.o \
 	ntfsprogs/boot.o \
 	ntfsprogs/attrdef.o
-#	src/ctype.o \
 
 .PHONY: all
 all: $(TARGET)
