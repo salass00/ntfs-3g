@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <proto/arossupport.h>
+#include <debugf.h>
 
 #define LOGIDENTMAX 256
 
@@ -27,7 +27,7 @@ static char lastchar(const char *str) {
 void vsyslog(int pri, const char *fmt, void *args) {
 	char buffer[256];
 	vsnprintf(buffer, sizeof(buffer), fmt, args);
-	kprintf("%s: %s%s", ms_logident, buffer, lastchar(buffer) == '\n' ? "" : "\n");
+	debugf("%s: %s%s", ms_logident, buffer, lastchar(buffer) == '\n' ? "" : "\n");
 }
 
 void syslog(int pri, const char *fmt, ...) {

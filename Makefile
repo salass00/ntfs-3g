@@ -1,6 +1,10 @@
-CC     := i386-aros-gcc
-AR     := i386-aros-ar
-RANLIB := i386-aros-ranlib
+CPU  := i386
+OS   := aros
+HOST := $(CPU)-$(OS)
+
+CC     := $(HOST)-gcc
+AR     := $(HOST)-ar
+RANLIB := $(HOST)-ranlib
 RM     := rm -f
 
 V ?= /V
@@ -10,7 +14,12 @@ CFLAGS  := -O2 -s -Wall -Werror -Wwrite-strings -fno-builtin-printf \
 	-I./include/ntfs-3g -I./src -I./libdiskio -I./amigaos_support/include \
 	-DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8
 LDFLAGS := -nostartfiles
-LIBS    := 
+LIBS    := -ldebug
+
+ifeq ($(HOST),m68k-amigaos)
+	CFLAGS  := -noixemul $(CFLAGS)
+	LDFLAGS := -noixemul $(LDFLAGS)
+endif
 
 LIBNTFS3G  := libntfs-3g.a
 LIBDISKIO  := libdiskio.a

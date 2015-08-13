@@ -41,8 +41,8 @@ struct Library *FileSysBoxBase;
 
 //#define DEBUG
 #ifdef DEBUG
-	#include <proto/arossupport.h>
-	#define DEBUGF(str,args...) kprintf(str, ## args)
+	#include <debugf.h>
+	#define DEBUGF(str,args...) debugf(str, ## args)
 #else
 	#define DEBUGF(str,args...)
 #endif
@@ -67,7 +67,7 @@ static int startup(void) {
 	SysBase = *(struct ExecBase **)4;
 #endif
 
-	DEBUGF("ntfs3g_startup: got execbase %p\n", SysBase);
+	DEBUGF("ntfs3g_startup: got execbase %#p\n", SysBase);
 
 	thisproc = (struct Process *)FindTask(NULL);
 
@@ -78,7 +78,7 @@ static int startup(void) {
 
 	struct MsgPort *port = &thisproc->pr_MsgPort;
 
-	DEBUGF("ntfs3g_startup: waiting at port %p\n", port);
+	DEBUGF("ntfs3g_startup: waiting at port %#p\n", port);
 
 	WaitPort(port);
 	struct Message *msg = GetMsg(port);
@@ -91,7 +91,7 @@ static int startup(void) {
 		return rc;
 	}
 
-	DEBUGF("ntfs3g_startup: got msg %p\n", msg);
+	DEBUGF("ntfs3g_startup: got msg %#p\n", msg);
 
 	if (!setup_malloc()) goto end;
 
