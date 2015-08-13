@@ -1,7 +1,18 @@
 #ifndef _BYTESWAP_H
 #define _BYTESWAP_H
 
+#ifdef __AROS__
 #include <stdint.h>
+#endif
+#include <sys/types.h>
+
+#if defined(AMIGA) && !defined(__AROS__) && !defined(STDINT_TYPES_DEFINED)
+#define STDINT_TYPES_DEFINED
+typedef u_int8_t  uint8_t;
+typedef u_int16_t uint16_t;
+typedef u_int32_t uint32_t;
+typedef u_int64_t uint64_t;
+#endif
 
 #if defined(__GNUC__) && (defined(__i386__) || defined(__i486__) || defined(__i586__))
 
@@ -58,7 +69,7 @@ static inline uint64_t bswap_64(uint64_t val) {
 
 static inline uint16_t bswap_16(uint16_t val) {
 	__asm__("rolw #8,%0"
-		: "=r" (val)
+		: "=d" (val)
 		:  "0" (val));
 	return val;
 }
@@ -67,7 +78,7 @@ static inline uint32_t bswap_32(uint32_t val) {
 	__asm__("rolw #8,%0\n\t"
 		"swap %0\n\t"
 		"rolw #8,%0"
-		: "=r" (val)
+		: "=d" (val)
 		: "0" (val));
 	return val;
 }

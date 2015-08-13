@@ -234,7 +234,7 @@ BOOL BlockCacheStore(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer, BOO
 				DEBUGF("Node not in clean list: %#p\n", cache);
 		}
 #endif
-		CopyMem(buffer, cache->data, bc->sector_size);
+		CopyMem((APTR)buffer, cache->data, bc->sector_size);
 		if (update_only && cache->dirty) {
 			cache->dirty = FALSE;
 			bc->num_dirty_nodes--;
@@ -277,7 +277,7 @@ BOOL BlockCacheStore(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer, BOO
 			cache->sector = sector;
 			res = InsertSplayNode(bc->cache_tree, &cache->sector, cache);
 			if (res != FALSE) {
-				CopyMem(buffer, cache->data, bc->sector_size);
+				CopyMem((APTR)buffer, cache->data, bc->sector_size);
 				cache->checksum = BlockChecksum(cache->data, bc->sector_size);
 				cache->dirty = FALSE;
 				AddHead((struct List *)&bc->clean_list, (struct Node *)cache);
@@ -316,7 +316,7 @@ BOOL BlockCacheWrite(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer) {
 				DEBUGF("Node not in clean list: %#p\n", cache);
 		}
 #endif
-		CopyMem(buffer, cache->data, bc->sector_size);
+		CopyMem((APTR)buffer, cache->data, bc->sector_size);
 		if (!cache->dirty) {
 			cache->checksum = -1;
 			cache->dirty = TRUE;
@@ -352,7 +352,7 @@ BOOL BlockCacheWrite(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer) {
 			cache->sector = sector;
 			res = InsertSplayNode(bc->cache_tree, &cache->sector, cache);
 			if (res != FALSE) {
-				CopyMem(buffer, cache->data, bc->sector_size);
+				CopyMem((APTR)buffer, cache->data, bc->sector_size);
 				cache->checksum = -1;
 				cache->dirty = TRUE;
 				AddHead((struct List *)&bc->dirty_list, (struct Node *)cache);

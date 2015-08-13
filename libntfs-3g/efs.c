@@ -26,6 +26,10 @@
 #include "config.h"
 #endif
 
+#if defined(__AROS__) || defined(AMIGA)
+#include <devices/timer.h>
+#endif
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -57,6 +61,7 @@
 #include "logging.h"
 #include "misc.h"
 #include "efs.h"
+#include "compat.h"
 
 #ifdef HAVE_SETXATTR	/* extended attributes interface required */
 

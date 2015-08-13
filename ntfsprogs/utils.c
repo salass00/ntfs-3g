@@ -28,6 +28,10 @@
 #include "config.h"
 #endif
 
+#if defined(__AROS__) || defined(AMIGA)
+#include <devices/timer.h>
+#endif
+
 #ifdef HAVE_STDIO_H
 #include <stdio.h>
 #endif
@@ -314,6 +318,7 @@ ntfs_volume * utils_mount_volume(const char *device, unsigned long flags)
 	return vol;
 }
 
+#if !defined(__AROS__) && !defined(AMIGA)
 /**
  * utils_parse_size - Convert a string representing a size
  * @value:  String to be parsed
@@ -383,7 +388,9 @@ int utils_parse_size(const char *value, s64 *size, BOOL scale)
 	*size = result;
 	return 1;
 }
+#endif
 
+#if !defined(__AROS__) && !defined(AMIGA)
 /**
  * utils_parse_range - Convert a string representing a range of numbers
  * @string:  The string to be parsed
@@ -434,6 +441,7 @@ int utils_parse_range(const char *string, s64 *start, s64 *finish, BOOL scale)
 	*finish = b;
 	return 1;
 }
+#endif
 
 /**
  * find_attribute - Find an attribute of the given type

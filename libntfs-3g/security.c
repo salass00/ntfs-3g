@@ -3005,7 +3005,7 @@ BOOL ntfs_allowed_as_owner(struct SECURITY_CONTEXT *scx, ntfs_inode *ni)
 	char *oldattr;
 	const SID *usid;
 	uid_t processuid;
-	uid_t uid;
+	uid_t uid = 0;
 	BOOL gotowner;
 	int allowed;
 

@@ -27,6 +27,10 @@
 #include "config.h"
 #endif
 
+#if defined(__AROS__) || defined(AMIGA)
+#include <devices/timer.h>
+#endif
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
@@ -668,7 +672,7 @@ void ntfs_inode_update_mbsname(ntfs_inode *dir_ni, const char *name, u64 inum)
 ntfs_inode *ntfs_pathname_to_inode(ntfs_volume *vol, ntfs_inode *parent,
 		const char *pathname)
 {
-	u64 inum;
+	u64 inum = 0;
 	int len, err = 0;
 	char *p, *q;
 	ntfs_inode *ni;

@@ -38,6 +38,14 @@
 #include <sys/types.h>
 #endif
 
+#if defined(AMIGA) && !defined(__AROS__) && !defined(STDINT_TYPES_DEFINED)
+#define STDINT_TYPES_DEFINED
+typedef u_int8_t  uint8_t;
+typedef u_int16_t uint16_t;
+typedef u_int32_t uint32_t;
+typedef u_int64_t uint64_t;
+#endif
+
 typedef uint8_t  u8;			/* Unsigned types of an exact size */
 typedef uint16_t u16;
 typedef uint32_t u32;

@@ -33,6 +33,10 @@
 
 #include "device.h"
 
+#ifndef UINT32_MAX
+#define UINT32_MAX 0xffffffffUL
+#endif
+
 extern const char *EXEC_NAME;
 
 #define SET_DEV_PD(dev,pd) dev->d_private = pd

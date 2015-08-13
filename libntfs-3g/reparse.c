@@ -25,6 +25,10 @@
 #include "config.h"
 #endif
 
+#if defined(__AROS__) || defined(AMIGA)
+#include <devices/timer.h>
+#endif
+
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif

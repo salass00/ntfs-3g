@@ -3723,16 +3723,20 @@ free_args:
 		
 }
 #endif
-		
+
 static int set_fuseblk_options(char **parsed_options)
 {
 	char options[64];
-	long pagesize; 
+	long pagesize;
 	u32 blksize = ctx->vol->cluster_size;
 	
+#ifdef HAVE_SYSCONF
 	pagesize = sysconf(_SC_PAGESIZE);
 	if (pagesize < 1)
 		pagesize = 4096;
+#else
+	pagesize = 4096;
+#endif
 	
 	if (blksize > (u32)pagesize)
 		blksize = pagesize;

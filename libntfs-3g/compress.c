@@ -51,6 +51,7 @@
 #include "lcnalloc.h"
 #include "logging.h"
 #include "misc.h"
+#include "compat.h"
 
 #undef le16_to_cpup 
 /* the standard le16_to_cpup() crashes for unaligned data on some processors */ 

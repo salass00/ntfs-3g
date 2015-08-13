@@ -25,6 +25,10 @@
 #include "config.h"
 #endif
 
+#if defined(__AROS__) || defined(AMIGA)
+#include <devices/timer.h>
+#endif
+
 #ifdef HAVE_SETXATTR /* extended attributes support required */
 
 #ifdef HAVE_STDIO_H
@@ -59,6 +63,7 @@
 #include "ea.h"
 #include "misc.h"
 #include "logging.h"
+#include "compat.h"
 
 /*
  *		Create a needed attribute (EA or EA_INFORMATION)

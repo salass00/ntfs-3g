@@ -37,6 +37,18 @@
 #define ENODATA ENOENT
 #endif
 
+#ifndef EOVERFLOW
+#define EOVERFLOW EFBIG
+#endif
+
+#ifndef EILSEQ
+#define EILSEQ EINVAL
+#endif
+
+#ifndef ENOTSUP
+#define ENOTSUP ENOSYS
+#endif
+
 #ifndef PATH_MAX
 #define PATH_MAX 4096
 #endif

@@ -40,7 +40,9 @@
 #include <errno.h>
 #endif
 
+#ifdef HAVE_GETOPT_H
 #include <getopt.h>
+#endif
 #if defined(__AROS__) || defined(AMIGA)
 #include <proto/exec.h>
 #include <proto/filesysbox.h>
@@ -54,6 +56,7 @@
 #include "ntfs-3g_common.h"
 #include "realpath.h"
 #include "misc.h"
+#include "compat.h"
 
 const char xattr_ntfs_3g[] = "ntfs-3g.";
 

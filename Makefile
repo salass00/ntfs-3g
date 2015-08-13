@@ -25,7 +25,11 @@ LIBNTFS3G  := libntfs-3g.a
 LIBDISKIO  := libdiskio.a
 LIBSUPPORT := libamigaos_support.a
 
-TARGET  := ntfs3g-handler
+ifeq ($(HOST),m68k-amigaos)
+	TARGET := ntfs3g-handler
+else
+	TARGET := NTFileSystem3G
+endif
 VERSION := 53
 
 LIBNTFS3G_OBJS := \
@@ -77,6 +81,8 @@ LIBSUPPORT_OBJS := \
 	amigaos_support/debugf.o \
 	amigaos_support/malloc.o \
 	amigaos_support/printf.o \
+	amigaos_support/snprintf.o \
+	amigaos_support/strlcpy.o \
 	amigaos_support/syslog.o
 
 STARTOBJ := \

@@ -1,5 +1,6 @@
 # Ignore object and archive files
 *.[oa]
-# Ignore generated exe file
+# Ignore generated exe files
 ntfs3g-handler
+NTFileSystem3G
 

@@ -20,6 +20,7 @@
 
 #include "param.h"
 #include "realpath.h"
+#include "compat.h"
 
 /* If there is no realpath() on the system, provide a dummy one. */
 #ifndef HAVE_REALPATH

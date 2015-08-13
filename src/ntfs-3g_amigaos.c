@@ -35,8 +35,8 @@
 #include "config.h"
 #endif
 
-#ifdef __AROS__
-#include <proto/exec.h>
+#if defined(__AROS__) || defined(AMIGA)
+#include <devices/timer.h>
 #endif
 
 #ifdef  HAVE_UNISTD_H
@@ -476,10 +476,10 @@ static ntfs_time mkntfs_time(void)
 {
 	struct timespec ts;
 
-	ts.tv_sec = 0;
-	ts.tv_nsec = 0;
+	ts.ts_sec = 0;
+	ts.ts_nsec = 0;
 	if (!opts2.use_epoch_time)
-		ts.tv_sec = time(NULL);
+		ts.ts_sec = time(NULL);
 	return timespec2ntfs(ts);
 }
 

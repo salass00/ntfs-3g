@@ -30,6 +30,10 @@ static const char USED verstag[] = VERSTAG;
 struct ExecBase *SysBase;
 struct DOSBase *DOSBase;
 struct UtilityBase *UtilityBase;
+#ifndef __AROS__
+struct DOSBase *__DOSBase;
+struct UtilityBase *__UtilityBase;
+#endif
 #ifdef __AROS__
 struct Library *aroscbase;
 #endif
@@ -56,7 +60,7 @@ extern int ntfs3g_main(struct Message *msg);
 __startup static AROS_PROCH(startup, argstr, argsize, sysbase) {
 	AROS_PROCFUNC_INIT
 #else
-static int startup(void) {
+int startup(void) {
 #endif
 	int rc = RETURN_FAIL, error = 0;
 	struct Process *thisproc;
@@ -97,9 +101,15 @@ static int startup(void) {
 
 	DOSBase = (struct DOSBase *)OpenLibrary((CONST_STRPTR)"dos.library", MIN_OS_VERSION);
 	if (DOSBase == NULL) goto end;
+#ifndef __AROS__
+	__DOSBase = DOSBase;
+#endif
 
 	UtilityBase = (struct UtilityBase *)OpenLibrary((CONST_STRPTR)"utility.library", MIN_OS_VERSION);
 	if (UtilityBase == NULL) goto end;
+#ifndef __AROS__
+	__UtilityBase = UtilityBase;
+#endif
 
 #ifdef __AROS__
 	aroscbase = OpenLibrary((CONST_STRPTR)"arosc.library", MIN_AROSC_VERSION);
