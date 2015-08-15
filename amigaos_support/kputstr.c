@@ -16,25 +16,23 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <debugf.h>
-#include <stdarg.h>
-#include <stdio.h>
 #include <clib/debug_protos.h>
 
-int vdebugf(const char *fmt, va_list args) {
-	char buffer[256];
-
-	int retval = vsnprintf(buffer, sizeof(buffer), fmt, args);
-	KPutStr((CONST_STRPTR)buffer);
-
-	return retval;
+#if !defined(__AROS__) && !defined(NODEBUG)
+void KPutStr(CONST_STRPTR str) {
+	__asm__ __volatile__
+	(
+		"move.l 4.w,a6\n\t"
+		"bra.s 2f\n"
+		"1:\n\t"
+		"jsr -516(a6)\n"
+		"2:\n\t"
+		"move.b (%0)+,d0\n\t"
+		"bne.s 1b"
+		:
+		: "a" (str)
+		: "d0", "a6"
+	);
 }
-
-int debugf(const char *fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	int retval = vdebugf(fmt, ap);
-	va_end(ap);
-	return retval;
-}
+#endif
 

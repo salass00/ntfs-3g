@@ -18,6 +18,7 @@
 #define LOG_INFO    6 /* informational */
 #define LOG_DEBUG   7 /* debug-level messages */
 
+int daemon(int nochdir, int noclose);
 void openlog(const char *ident, int option, int facility);
 void closelog(void);
 void syslog(int pri, const char *fmt, ...);

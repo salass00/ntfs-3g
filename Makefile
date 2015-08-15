@@ -19,6 +19,7 @@ LIBS    := -ldebug
 ifeq ($(HOST),m68k-amigaos)
 	CFLAGS  := -noixemul $(CFLAGS)
 	LDFLAGS := -noixemul $(LDFLAGS)
+	LIBS    := 
 endif
 
 LIBNTFS3G  := libntfs-3g.a
@@ -80,6 +81,7 @@ LIBDISKIO_OBJS := \
 
 LIBSUPPORT_OBJS := \
 	amigaos_support/debugf.o \
+	amigaos_support/kputstr.o \
 	amigaos_support/malloc.o \
 	amigaos_support/printf.o \
 	amigaos_support/snprintf.o \
