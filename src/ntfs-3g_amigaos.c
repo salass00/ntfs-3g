@@ -35,10 +35,6 @@
 #include "config.h"
 #endif
 
-#if defined(__AROS__) || defined(AMIGA)
-#include <devices/timer.h>
-#endif
-
 #ifdef  HAVE_UNISTD_H
 #include <unistd.h>
 #endif

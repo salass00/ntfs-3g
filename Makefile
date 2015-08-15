@@ -84,6 +84,7 @@ LIBSUPPORT_OBJS := \
 	amigaos_support/kputstr.o \
 	amigaos_support/malloc.o \
 	amigaos_support/printf.o \
+	amigaos_support/random.o \
 	amigaos_support/snprintf.o \
 	amigaos_support/strlcpy.o \
 	amigaos_support/syslog.o

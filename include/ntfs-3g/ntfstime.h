@@ -39,7 +39,7 @@
 /*
  * assume "struct timespec" is not defined if st_mtime is not defined
  */
-#if !defined(AMIGA) || defined(__AROS__)
+#if !defined(AMIGA) || !defined(libnix)
 #if !defined(st_mtime) && !defined(__timespec_defined)
 struct timespec {
 	time_t tv_sec;

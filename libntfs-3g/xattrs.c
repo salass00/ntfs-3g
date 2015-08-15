@@ -23,10 +23,6 @@
 #include "config.h"
 #endif
 
-#if defined(__AROS__) || defined(AMIGA)
-#include <devices/timer.h>
-#endif
-
 #ifdef HAVE_SETXATTR /* extended attributes support required */
 
 #ifdef HAVE_STDIO_H
