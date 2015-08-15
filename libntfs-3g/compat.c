@@ -65,7 +65,7 @@ int ffs(int x)
 }
 #endif /* HAVE_FFS */
 
-#if defined(HAVE_DAEMON) && !defined(__AROS__) && !defined(AMIGA)
+#ifndef HAVE_DAEMON
 /* ************************************************************
  *  From: src.opensolaris.org
  *  src/lib/libresolv2/common/bsd/daemon.c

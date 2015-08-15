@@ -211,7 +211,9 @@
 /* #undef HAVE_STRNLEN */
 
 /* Define to 1 if you have the `strsep' function. */
+#ifdef __AROS__
 #define HAVE_STRSEP 1
+#endif
 
 /* Define to 1 if you have the `strtol' function. */
 #define HAVE_STRTOL 1
