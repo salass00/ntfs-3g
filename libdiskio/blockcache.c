@@ -44,7 +44,11 @@ AROS_UFH5(int, DIO_MemHandler,
 {
 	AROS_USERFUNC_INIT
 #else
-SAVEDS ASM int DIO_MemHandler(REG(a0, APTR custom), REG(a1, APTR data)) {
+SAVEDS ASM int DIO_MemHandler(
+	REG(a6, struct ExecBase *SysBase),
+	REG(a0, APTR custom),
+	REG(a1, APTR data))
+{
 #endif
 	DEBUGF("DIO_MemHandler(%#p, %#p)\n", custom, data);
 
