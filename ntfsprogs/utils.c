@@ -206,13 +206,13 @@ int ntfs_mbstoucs_libntfscompat(const char *ins,
  */
 int utils_valid_device(const char *name, int force)
 {
+#if defined(HAVE_WINDOWS_H) || defined(__CYGWIN32__) || defined(__AROS__) || defined(AMIGA)
+	/* FIXME: This doesn't work for Cygwin, so just return success. */
+	return 1;
+#else
 	unsigned long mnt_flags = 0;
 	struct stat st;
 
-#if defined(HAVE_WINDOWS_H) || defined(__CYGWIN32__) || defined(__AROS__)
-	/* FIXME: This doesn't work for Cygwin, so just return success. */
-	return 1;
-#endif
 	if (!name) {
 		errno = EINVAL;
 		return 0;
@@ -249,6 +249,7 @@ int utils_valid_device(const char *name, int force)
 	}
 
 	return 1;
+#endif
 }
 
 /**
