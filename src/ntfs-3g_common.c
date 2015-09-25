@@ -229,6 +229,20 @@ static int missing_option_value(char *val, const char *s)
 	return 0;
 }
 
+static int ntfs_atoi(const char *str, int *pval, int base)
+{
+	char *end;
+
+	errno = 0;
+
+	*pval = strtol(str, &end, base);
+
+	if (errno || *end != '\0')
+		return 0;
+
+	return 1;
+}
+
 char *parse_mount_options(ntfs_fuse_context_t *ctx,
 			const struct ntfs_options *popts, BOOL low_fuse)
 {
@@ -265,7 +279,7 @@ char *parse_mount_options(ntfs_fuse_context_t *ctx,
 				goto err_exit;
 			if ((poptl->flags & FLGOPT_OCTAL)
 			    && (!val
-				|| !sscanf(val, "%o", &intarg))) {
+				|| !ntfs_atoi(val, &intarg, 8))) {
 				ntfs_log_error("'%s' option needs an octal value\n",
 					opt);
 				goto err_exit;
@@ -275,7 +289,7 @@ char *parse_mount_options(ntfs_fuse_context_t *ctx,
 					intarg = 0;
 				else
 					if (!val
-					    || !sscanf(val, "%i", &intarg)) {
+						|| !ntfs_atoi(val, &intarg, 10)) {
 						ntfs_log_error("'%s' option "
 						     "needs a decimal value\n",
 							opt);
