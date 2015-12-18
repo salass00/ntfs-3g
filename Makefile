@@ -7,8 +7,6 @@ AR     := $(HOST)-ar
 RANLIB := $(HOST)-ranlib
 RM     := rm -f
 
-V ?= /V
-
 CFLAGS  := -O2 -s -Wall -Werror -Wwrite-strings -fno-builtin-printf \
 	-fno-builtin-fprintf -I../filesysbox/include -I. \
 	-I./include/ntfs-3g -I./src -I./libdiskio -I./amigaos_support/include \
