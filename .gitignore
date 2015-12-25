@@ -3,4 +3,5 @@
 # Ignore generated exe files
 ntfs3g-handler
 NTFileSystem3G
-
+# Ignore release archives
+*.7z

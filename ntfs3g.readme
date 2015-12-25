@@ -1,0 +1,40 @@
+Short:        A port of Tuxera's NTFS-3G file system
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         disk/misc
+Version:      xx.xx
+Architecture: xxx
+
+NTFS-3G is a stable, full-featured, read-write NTFS driver for Linux, Android,
+Mac OS X, FreeBSD, NetBSD, OpenSolaris, QNX, Haiku, and other operating
+systems. It provides safe handling of the Windows XP, Windows Server 2003,
+Windows 2000, Windows Vista, Windows Server 2008, Windows 7 and Windows 8 NTFS
+file systems.
+
+Installation:
+
+Copy L/ntfs3g-handler L:
+
+Usage:
+
+When creating a DOSDriver or Mountlist entry for an NTFS partition make sure
+that the FileSystem and Handler are set as follows:
+
+FileSystem     = ntfs3g-handler
+DosType        = 0x4e544653
+
+Also to make a read-only mount you can set:
+
+Control        = ro
+
+Source code:
+
+The source code for current and older versions is available under APL license
+on github:
+
+https://github.com/salass00/ntfs-3g
+
+Changes:
+
+For a list of changes in this and earlier versions see the releasenotes file.
+
