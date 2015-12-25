@@ -7,3 +7,10 @@ ntfs3g-handler 53.2 (3.8.2015)
 
 - Updated NTFS-3G code from version 2014.2.15 to 2015.3.14.
 
+
+ntfs3g-handler 53.3 (25.12.2015)
+
+- Replaced kprintf() with KPutStr() in vdebugf().
+
+- Replaced sscanf() with a strtol() wrapper.
+
