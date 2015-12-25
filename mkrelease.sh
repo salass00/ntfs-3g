@@ -17,7 +17,7 @@ rm -rf ${DESTDIR}
 mkdir -p ${DESTDIR}/ntfs3g-${NUMVERS}/L
 
 cp -p ntfs3g.readme ${DESTDIR}/ntfs3g-${NUMVERS}
-cp -p LICENSE.APL ${DESTDIR}/ntfs3g-${NUMVERS}
+cp -p COPYING ${DESTDIR}/ntfs3g-${NUMVERS}
 cp -p releasenotes ${DESTDIR}/ntfs3g-${NUMVERS}
 cp -p ntfs3g-handler ${DESTDIR}/ntfs3g-${NUMVERS}/L
 
