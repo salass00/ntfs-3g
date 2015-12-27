@@ -3,6 +3,7 @@ Author:       Fredrik Wikstrom
 Uploader:     Fredrik Wikstrom <fredrik@a500.org>
 Type:         disk/misc
 Version:      xx.xx
+Requires:     xxx
 Architecture: xxx
 
 NTFS-3G is a stable, full-featured, read-write NTFS driver for Linux, Android,
@@ -10,6 +11,10 @@ Mac OS X, FreeBSD, NetBSD, OpenSolaris, QNX, Haiku, and other operating
 systems. It provides safe handling of the Windows XP, Windows Server 2003,
 Windows 2000, Windows Vista, Windows Server 2008, Windows 7 and Windows 8 NTFS
 file systems.
+
+Requirements:
+
+- filesysbox.library
 
 Installation:
 
