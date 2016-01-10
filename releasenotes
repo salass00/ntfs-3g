@@ -14,3 +14,8 @@ ntfs3g-handler 53.3 (25.12.2015)
 
 - Replaced sscanf() with a strtol() wrapper.
 
+
+ntfs3g-handler 53.4 (xx.xx.2016)
+
+- Replaced splay functions with more efficient ones.
+
