@@ -36,6 +36,9 @@ static inline ULONG FirstSetBit(ULONG x) {
 #ifdef __PPC__
 	__asm__ ("cntlzw %0,%1" : "=r" (x) : "r" (x));
 	return 31 - x;
+#elif defined(__mc68020)
+	__asm__ ("bfffo %1{#0,#32},%0" : "=d" (x) : "g" (x));
+	return 31 - x;
 #else
 	ULONG i;
 	for (i = 0; i < 32; i++) {
@@ -58,32 +61,25 @@ static BOOL PickCommandSet(struct DiskIO *dio) {
 
 	if ((last_byte >> 32) != 0) {
 		if (dio->cmd_support & CMDSF_NSD_ETD64) {
-			DEBUGF("Using NSD ETD64 command set\n");
 			dio->read_cmd  = NSCMD_ETD_READ64;
 			dio->write_cmd = NSCMD_ETD_WRITE64;
 		} else if (dio->cmd_support & CMDSF_NSD_TD64) {
-			DEBUGF("Using NSD TD64 command set\n");
 			dio->read_cmd  = NSCMD_TD_READ64;
 			dio->write_cmd = NSCMD_TD_WRITE64;
 		} else if (dio->cmd_support & CMDSF_TD64) {
-			DEBUGF("Using unofficial TD64 command set\n");
 			dio->read_cmd  = TD_READ64;
 			dio->write_cmd = TD_WRITE64;
 		} else {
-			DEBUGF("No supported 64-bit command set found\n");
 			success = FALSE;
 		}
 	} else {
 		if (dio->cmd_support & CMDSF_ETD32) {
-			DEBUGF("Using ETD command set\n");
 			dio->read_cmd  = ETD_READ;
 			dio->write_cmd = ETD_WRITE;
 		} else if (dio->cmd_support & CMDSF_TD32) {
-			DEBUGF("Using CMD command set\n");
 			dio->read_cmd  = CMD_READ;
 			dio->write_cmd = CMD_WRITE;
 		} else {
-			DEBUGF("No supported 32-bit command set found\n");
 			success = FALSE;
 		}
 	}
