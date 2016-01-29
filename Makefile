@@ -75,6 +75,7 @@ LIBDISKIO_OBJS := \
 	libdiskio/deviceio.o \
 	libdiskio/cachedio.o \
 	libdiskio/blockcache.o \
+	libdiskio/memhandler.o \
 	libdiskio/splay.o \
 	libdiskio/mergesort.o
 
