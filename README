@@ -1,11 +1,3 @@
-Short:        A port of Tuxera's NTFS-3G file system
-Author:       Fredrik Wikstrom
-Uploader:     Fredrik Wikstrom <fredrik@a500.org>
-Type:         disk/misc
-Version:      xx.xx
-Requires:     xxx
-Architecture: xxx
-
 NTFS-3G is a stable, full-featured, read-write NTFS driver for Linux, Android,
 Mac OS X, FreeBSD, NetBSD, OpenSolaris, QNX, Haiku, and other operating
 systems. It provides safe handling of the Windows XP, Windows Server 2003,
