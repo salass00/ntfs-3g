@@ -17,7 +17,12 @@
  */
 
 #include "diskio_internal.h"
+
+#ifdef __AROS__
 #include <stdint.h>
+#else
+#define UINT64_MAX (0xffffffffffffffffULL)
+#endif
 
 #define PERCENT_PROTECTED      30
 #define PERCENT_DIRTY          30
@@ -316,7 +321,7 @@ static struct BlockRangeNode *AddToBlockRange(struct BlockCache *bc, struct Bloc
 
 static struct BlockCacheNode *AddSector(struct BlockCache *bc, UQUAD sector, BOOL dirty) {
 	struct BlockCacheNode *bcn;
-	struct BlockRangeNode *brn;
+	struct BlockRangeNode *brn = NULL;
 	APTR data;
 
 	bcn = AllocPooled(bc->mempool, sizeof(struct BlockCacheNode));
@@ -555,7 +560,7 @@ BOOL StoreCacheNode(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer, ULON
 			if (bcn != NULL) {
 				result = TRUE;
 
-				CopyMem(buffer, bcn->data, bc->sector_size);
+				CopyMem((APTR)buffer, bcn->data, bc->sector_size);
 
 				bcn->checksum = BlockChecksum(bcn->data, bc->sector_size);
 			}
@@ -586,7 +591,7 @@ BOOL WriteCacheNode(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer, ULON
 		if (bcn->type == BCN_DIRTY) {
 			result = TRUE;
 
-			CopyMem((CONST_APTR)buffer, bcn->data, bc->sector_size);
+			CopyMem((APTR)buffer, bcn->data, bc->sector_size);
 		}
 
 		CacheHit(bc, bcn);
@@ -596,7 +601,7 @@ BOOL WriteCacheNode(struct BlockCache *bc, UQUAD sector, CONST_APTR buffer, ULON
 			if (bcn != NULL) {
 				result = TRUE;
 
-				CopyMem(buffer, bcn->data, bc->sector_size);
+				CopyMem((APTR)buffer, bcn->data, bc->sector_size);
 
 				bcn->checksum = (ULONG)-1;
 			}

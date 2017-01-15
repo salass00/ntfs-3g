@@ -30,7 +30,12 @@
 #include <proto/filesysbox.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include "splay.h"
+
+#ifndef __AROS__
+#include <SDI/SDI_compiler.h>
+#endif
 
 //#define DEBUG
 #define DISABLE_DOSTYPE_CHECK
