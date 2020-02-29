@@ -4,6 +4,12 @@ systems. It provides safe handling of the Windows XP, Windows Server 2003,
 Windows 2000, Windows Vista, Windows Server 2008, Windows 7 and Windows 8 NTFS
 file systems.
 
+This is a port of NTFS-3G for the AROS operating system. For the original
+source code and pre-compiled binaries for the other operating systems
+mentioned above you should go to:
+
+https://www.tuxera.com/community/open-source-ntfs-3g/
+
 Requirements:
 
 - filesysbox.library
