@@ -473,7 +473,7 @@ static int entersecurity_stuff(ntfs_volume *vol, fbx_off_t offs)
  *
  *	Should only be called by entersecurityattr() to ensure consistency
  *
- *	Returns zero if sucessful
+ *	Returns zero if successful
  */
 
 static int entersecurity_data(ntfs_volume *vol,
@@ -539,7 +539,7 @@ static int entersecurity_data(ntfs_volume *vol,
  *
  *	Should only be called by entersecurityattr() to ensure consistency
  *
- *	Returns zero if sucessful
+ *	Returns zero if successful
  */
 
 static int entersecurity_indexes(ntfs_volume *vol, s64 attrsz,

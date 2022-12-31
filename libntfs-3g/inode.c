@@ -1454,7 +1454,7 @@ int ntfs_inode_badclus_bad(u64 mft_no, ATTR_RECORD *attr)
  *	They are returned in following order : create, update, access, change
  *	provided they fit in requested size.
  *
- *	Returns the modified size if successfull (or 32 if buffer size is null)
+ *	Returns the modified size if successful (or 32 if buffer size is null)
  *		-errno if failed
  */
 
