@@ -14,6 +14,11 @@ CFLAGS  := -O2 -s -Wall -Werror -Wwrite-strings -fno-builtin-printf \
 LDFLAGS := -nostartfiles
 LIBS    := -ldebug
 
+ifneq (,$(SYSROOT))
+	CFLAGS  := --sysroot=$(SYSROOT) $(CFLAGS)
+	LDFLAGS := --sysroot=$(SYSROOT) $(LDFLAGS)
+endif
+
 ifeq ($(HOST),m68k-amigaos)
 	CFLAGS  := -noixemul $(CFLAGS)
 	LDFLAGS := -noixemul $(LDFLAGS)
