@@ -1,7 +1,7 @@
 /*
  * amiga_io.c --- DiskIO cached version of Amiga device I/O backend.
  *
- * Copyright (C) 2013-2016 Fredrik Wikstrom.
+ * Copyright (C) 2015-2026 Fredrik Wikstrom.
  *
  * This program/include file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published
