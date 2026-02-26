@@ -90,6 +90,7 @@ LIBSUPPORT_OBJS = \
 	amigaos_support/printf.o \
 	amigaos_support/random.o \
 	amigaos_support/snprintf.o \
+	amigaos_support/strdup.o \
 	amigaos_support/strlcpy.o \
 	amigaos_support/syslog.o
 
