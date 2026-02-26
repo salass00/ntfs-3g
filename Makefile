@@ -1,18 +1,24 @@
-CPU  := i386
-OS   := aros
-HOST := $(CPU)-$(OS)
+HOST ?= i386-aros
 
-CC     := $(HOST)-gcc
-AR     := $(HOST)-ar
-RANLIB := $(HOST)-ranlib
-RM     := rm -f
+CC     = $(HOST)-gcc
+AR     = $(HOST)-ar
+RANLIB = $(HOST)-ranlib
 
-CFLAGS  := -O2 -s -Wall -Werror -Wwrite-strings -fno-builtin-printf \
-	-fno-builtin-fprintf -I../filesysbox/include -I. \
-	-I./include/ntfs-3g -I./src -I./libdiskio -I./amigaos_support/include \
-	-DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8
-LDFLAGS := -nostartfiles
-LIBS    := -ldebug
+ifeq ($(HOST),m68k-amigaos)
+	TARGET = NTFileSystem3G
+else
+	TARGET = ntfs3g-handler
+endif
+VERSION = 53
+
+INCLUDES = -I. -I./include/ntfs-3g -I./src -I./libdiskio -I./amigaos_support/include
+DEFINES  = -DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8 #-DDEBUG
+WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable
+
+CFLAGS  = -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
+          $(INCLUDES) $(DEFINES) $(WARNINGS)
+LDFLAGS = -s -nostartfiles
+LIBS    = -ldebug
 
 ifneq (,$(SYSROOT))
 	CFLAGS  := --sysroot=$(SYSROOT) $(CFLAGS)
@@ -22,21 +28,14 @@ endif
 ifeq ($(HOST),m68k-amigaos)
 	CFLAGS  := -noixemul $(CFLAGS)
 	LDFLAGS := -noixemul $(LDFLAGS)
-	LIBS    := 
+	LIBS =
 endif
 
-LIBNTFS3G  := libntfs-3g.a
-LIBDISKIO  := libdiskio.a
-LIBSUPPORT := libamigaos_support.a
+LIBNTFS3G  = libntfs-3g.a
+LIBDISKIO  = libdiskio.a
+LIBSUPPORT = libamigaos_support.a
 
-ifeq ($(HOST),m68k-amigaos)
-	TARGET := NTFileSystem3G
-else
-	TARGET := ntfs3g-handler
-endif
-VERSION := 53
-
-LIBNTFS3G_OBJS := \
+LIBNTFS3G_OBJS = \
 	libntfs-3g/bitmap.o \
 	libntfs-3g/misc.o \
 	libntfs-3g/bootsect.o \
@@ -69,7 +68,7 @@ LIBNTFS3G_OBJS := \
 	libntfs-3g/compat.o \
 	libntfs-3g/amiga_io.o
 
-LIBDISKIO_OBJS := \
+LIBDISKIO_OBJS = \
 	libdiskio/setup.o \
 	libdiskio/cleanup.o \
 	libdiskio/update.o \
@@ -83,7 +82,7 @@ LIBDISKIO_OBJS := \
 	libdiskio/memhandler.o \
 	libdiskio/splay.o
 
-LIBSUPPORT_OBJS := \
+LIBSUPPORT_OBJS = \
 	amigaos_support/debugf.o \
 	amigaos_support/gettimeofday.o \
 	amigaos_support/kputstr.o \
@@ -94,10 +93,10 @@ LIBSUPPORT_OBJS := \
 	amigaos_support/strlcpy.o \
 	amigaos_support/syslog.o
 
-STARTOBJ := \
+STARTOBJ = \
 	src/ntfs3g-startup_amigaos.o
 
-OBJS := \
+OBJS = \
 	src/ntfs-3g.o \
 	src/ntfs-3g_common.o \
 	src/ntfs-3g_amigaos.o \
@@ -116,6 +115,8 @@ $(LIBNTFS3G): $(LIBNTFS3G_OBJS)
 $(LIBDISKIO): $(LIBDISKIO_OBJS)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
+
+amigaos_support/malloc.o: CFLAGS += -fno-builtin
 
 $(LIBSUPPORT): $(LIBSUPPORT_OBJS)
 	$(AR) -crv $@ $^
