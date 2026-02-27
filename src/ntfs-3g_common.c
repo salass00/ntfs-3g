@@ -253,7 +253,7 @@ char *parse_mount_options(ntfs_fuse_context_t *ctx,
 	int permissions = 0;
 	int acl = 0;
 	int want_permissions = 0;
-	int intarg;
+	int intarg = 0;
 	const struct DEFOPTION *poptl;
 
 	ctx->secure_flags = 0;
