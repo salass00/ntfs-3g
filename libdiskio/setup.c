@@ -237,7 +237,7 @@ struct DiskIO *DIO_Setup(CONST_STRPTR name, const struct TagItem *tags) {
 cleanup:
 	if (dio != NULL) DIO_Cleanup(dio);
 
-	error_storage = (int *)GetTagData(DIOS_Error, (Tag)NULL, tags);
+	error_storage = (int *)GetTagData(DIOS_Error, (IPTR)NULL, tags);
 	if (error_storage != NULL) *error_storage = error;
 
 	DEBUGF("DIO_Setup failed (error: %d)\n", error);
