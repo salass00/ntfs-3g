@@ -39,15 +39,11 @@
 /*
  * assume "struct timespec" is not defined if st_mtime is not defined
  */
-#if !defined(AMIGA) || !defined(libnix)
-#if !defined(st_mtime) && !defined(__timespec_defined) && !defined(__AROS__)
+#if !defined(st_mtime) && !defined(__timespec_defined) && !defined(AMIGA) && !defined(__AROS__)
 struct timespec {
 	time_t tv_sec;
 	long tv_nsec;
 } ;
-#endif
-#define ts_sec  tv_sec
-#define ts_nsec tv_nsec
 #endif
 
 /*
@@ -75,12 +71,12 @@ static __inline__ struct timespec ntfs2timespec(ntfs_time ntfstime)
 	s64 cputime;
 
 	cputime = sle64_to_cpu(ntfstime);
-	spec.ts_sec = (cputime - (NTFS_TIME_OFFSET)) / 10000000;
-	spec.ts_nsec = (cputime - (NTFS_TIME_OFFSET)
-			- (s64)spec.ts_sec*10000000)*100;
+	spec.tv_sec = (cputime - (NTFS_TIME_OFFSET)) / 10000000;
+	spec.tv_nsec = (cputime - (NTFS_TIME_OFFSET)
+			- (s64)spec.tv_sec*10000000)*100;
 		/* force zero nsec for overflowing dates */
-	if ((spec.ts_nsec < 0) || (spec.ts_nsec > 999999999))
-		spec.ts_nsec = 0;
+	if ((spec.tv_nsec < 0) || (spec.tv_nsec > 999999999))
+		spec.tv_nsec = 0;
 	return (spec);
 }
 
@@ -104,8 +100,8 @@ static __inline__ ntfs_time timespec2ntfs(struct timespec spec)
 {
 	s64 units;
 
-	units = (s64)spec.ts_sec * 10000000
-				+ NTFS_TIME_OFFSET + spec.ts_nsec/100;
+	units = (s64)spec.tv_sec * 10000000
+				+ NTFS_TIME_OFFSET + spec.tv_nsec/100;
 	return (cpu_to_le64(units));
 }
 
@@ -123,11 +119,11 @@ static __inline__ ntfs_time ntfs_current_time(void)
 	struct timeval microseconds;
 
 	gettimeofday(&microseconds, (struct timezone*)NULL);
-	now.ts_sec = microseconds.tv_sec;
-	now.ts_nsec = microseconds.tv_usec*1000;
+	now.tv_sec = microseconds.tv_sec;
+	now.tv_nsec = microseconds.tv_usec*1000;
 #else
-	now.ts_sec = time((time_t*)NULL);
-	now.ts_nsec = 0;
+	now.tv_sec = time((time_t*)NULL);
+	now.tv_nsec = 0;
 #endif
 	return (timespec2ntfs(now));
 }

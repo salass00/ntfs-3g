@@ -472,10 +472,10 @@ static ntfs_time mkntfs_time(void)
 {
 	struct timespec ts;
 
-	ts.ts_sec = 0;
-	ts.ts_nsec = 0;
+	ts.tv_sec = 0;
+	ts.tv_nsec = 0;
 	if (!opts2.use_epoch_time)
-		ts.ts_sec = time(NULL);
+		ts.tv_sec = time(NULL);
 	return timespec2ntfs(ts);
 }
 
