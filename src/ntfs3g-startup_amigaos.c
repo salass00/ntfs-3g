@@ -20,7 +20,12 @@
 #include <proto/dos.h>
 #include <proto/filesysbox.h>
 #include <SDI/SDI_compiler.h>
+
+#ifdef __AROS__
 #include "ntfs3g-handler_rev.h"
+#else
+#include "NTFileSystem3G_rev.h"
+#endif
 
 struct ExecBase *SysBase;
 struct DosLibrary *DOSBase;
