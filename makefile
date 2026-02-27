@@ -13,7 +13,8 @@ VERSION = 53
 
 INCLUDES = -I. -I./include/ntfs-3g -I./src -I./libdiskio -I./amigaos_support/include
 DEFINES  = -DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8 #-DDEBUG
-WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable
+WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable \
+           -Wno-address-of-packed-member -Wno-zero-length-bounds
 
 CFLAGS  = -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
           $(INCLUDES) $(DEFINES) $(WARNINGS)
