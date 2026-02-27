@@ -4212,18 +4212,11 @@ int ntfs3g_main(struct Message *msg)
 	}
 
 	/* need absolute mount point for junctions */
-	if (opts.mnt_point[0] == '/')
-	   ctx->abs_mnt_point = strdup(opts.mnt_point);
-	else {
-	   ctx->abs_mnt_point = (char*)ntfs_malloc(PATH_MAX);
-	   if (ctx->abs_mnt_point) {
-	      if (getcwd(ctx->abs_mnt_point,
-	              PATH_MAX - strlen(opts.mnt_point) - 2)) {
-	         strcat(ctx->abs_mnt_point, "/");
-	         strcat(ctx->abs_mnt_point, opts.mnt_point);
-	      }
-	   }
+	if (opts.mnt_point[0] != '/') {
+		err = NTFS_VOLUME_UNKNOWN_REASON;
+		goto err_out;
 	}
+	ctx->abs_mnt_point = strdup(opts.mnt_point);
 	if (!ctx->abs_mnt_point) {
 	   err = NTFS_VOLUME_OUT_OF_MEMORY;
 	   goto err_out;
