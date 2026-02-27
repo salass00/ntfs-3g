@@ -101,7 +101,8 @@ LIBSUPPORT_SRCS = \
 	amigaos_support/snprintf.c \
 	amigaos_support/strdup.c \
 	amigaos_support/strlcpy.c \
-	amigaos_support/syslog.c
+	amigaos_support/syslog.c \
+	amigaos_support/usergroup.c
 
 SRCS = \
 	src/ntfs3g-startup_amigaos.c \
