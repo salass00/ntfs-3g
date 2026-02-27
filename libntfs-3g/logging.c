@@ -188,7 +188,7 @@ u32 ntfs_log_clear_flags(u32 flags)
 	return old;
 }
 
-
+#if !defined(AMIGA) && !defined(__AROS__)
 /**
  * ntfs_log_get_stream - Default output streams for logging levels
  * @level:	Log level
@@ -276,6 +276,7 @@ static const char * ntfs_log_get_prefix(u32 level)
 
 	return prefix;
 }
+#endif
 
 
 /**
@@ -412,6 +413,7 @@ void ntfs_log_early_error(const char *format, ...)
 	va_end(args);
 }
 
+#if !defined(AMIGA) && !defined(__AROS__)
 /**
  * ntfs_log_handler_fprintf - Basic logging handler
  * @function:	Function in which the log line occurred
@@ -487,6 +489,7 @@ int ntfs_log_handler_fprintf(const char *function, const char *file,
 	errno = olderr;
 	return ret;
 }
+#endif
 
 /**
  * ntfs_log_handler_null - Null logging handler (no output)
@@ -510,6 +513,7 @@ int ntfs_log_handler_null(const char *function __attribute__((unused)), const ch
 	return 0;
 }
 
+#if !defined(AMIGA) && !defined(__AROS__)
 /**
  * ntfs_log_handler_stdout - All logs go to stdout
  * @function:	Function in which the log line occurred
@@ -600,6 +604,7 @@ int ntfs_log_handler_stderr(const char *function, const char *file,
 
 	return ntfs_log_handler_fprintf(function, file, line, level, data, format, args);
 }
+#endif
 
 
 /**
