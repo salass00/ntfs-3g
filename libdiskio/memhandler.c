@@ -28,7 +28,7 @@ AROS_UFH5(int, DiskIOMemHandler,
 {
 	AROS_USERFUNC_INIT
 #else
-SAVEDS ASM int DiskIOMemHandler(
+/*SAVEDS*/ ASM int DiskIOMemHandler(
 	REG(a6, struct ExecBase *SysBase),
 	REG(a0, APTR custom),
 	REG(a1, APTR data))
