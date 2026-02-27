@@ -21,15 +21,17 @@ CFLAGS  = -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
 LDFLAGS = -nostartfiles
 LIBS    = -ldebug
 
+ifneq (,$(findstring -aros,$(HOST)))
+	CPU = $(patsubst %-aros,%,$(HOST))
+	INCLUDES += -I./include/aros
+else
+	CPU = 68000
+	INCLUDES += -I./include/amigaos3
+endif
+
 ifneq (,$(SYSROOT))
 	CFLAGS  := --sysroot=$(SYSROOT) $(CFLAGS)
 	LDFLAGS := --sysroot=$(SYSROOT) $(LDFLAGS)
-endif
-
-ifneq (,$(findstring -aros,$(HOST)))
-	CPU = $(patsubst %-aros,%,$(HOST))
-else
-	CPU = 68000
 endif
 
 ifeq ($(HOST),m68k-amigaos)

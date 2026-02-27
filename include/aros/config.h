@@ -53,9 +53,7 @@
 #define HAVE_DUP2 1
 
 /* Define to 1 if you have the <endian.h> header file. */
-#ifdef __AROS__
 #define HAVE_ENDIAN_H 1
-#endif
 
 /* Define to 1 if you have the <errno.h> header file. */
 #define HAVE_ERRNO_H 1
@@ -79,9 +77,7 @@
 /* #undef HAVE_GETMNTENT */
 
 /* Define to 1 if you have the <getopt.h> header file. */
-#ifdef __AROS__
 #define HAVE_GETOPT_H 1
-#endif
 
 /* Define to 1 if you have the `getopt_long' function. */
 #define HAVE_GETOPT_LONG 1
@@ -96,9 +92,7 @@
 #define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the <libgen.h> header file. */
-#ifdef __AROS__
 #define HAVE_LIBGEN_H 1
-#endif
 
 /* Define to 1 if you have the <libintl.h> header file. */
 /* #undef HAVE_LIBINTL_H */
@@ -152,9 +146,7 @@
 /* #undef HAVE_REGEX_H */
 
 /* Define to 1 if you have the `setlocale' function. */
-#ifdef __AROS__
 #define HAVE_SETLOCALE 1
-#endif
 
 /* Define to 1 if you have the `setxattr' function. */
 #define HAVE_SETXATTR 1
@@ -176,9 +168,7 @@
 #define HAVE_STDDEF_H 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
-#ifdef __AROS__
 #define HAVE_STDINT_H 1
-#endif
 
 /* Define to 1 if you have the <stdio.h> header file. */
 #define HAVE_STDIO_H 1
@@ -211,9 +201,7 @@
 /* #undef HAVE_STRNLEN */
 
 /* Define to 1 if you have the `strsep' function. */
-#ifdef __AROS__
 #define HAVE_STRSEP 1
-#endif
 
 /* Define to 1 if you have the `strtol' function. */
 #define HAVE_STRTOL 1
@@ -241,9 +229,7 @@
 #define HAVE_ST_BLOCKS 1
 
 /* Define to 1 if you have the `sysconf' function. */
-#ifdef __AROS__
 #define HAVE_SYSCONF 1
-#endif
 
 /* Define to 1 if you have the <syslog.h> header file. */
 #define HAVE_SYSLOG_H 1
@@ -303,9 +289,7 @@
 #define HAVE_VPRINTF 1
 
 /* Define to 1 if you have the <wchar.h> header file. */
-#ifdef __AROS__
 #define HAVE_WCHAR_H 1
-#endif
 
 /* Define to 1 if you have the <windows.h> header file. */
 /* #undef HAVE_WINDOWS_H */
@@ -358,9 +342,7 @@
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
-#ifndef __AROS__
-#define WORDS_BIGENDIAN 1
-#endif
+/* #undef WORDS_BIGENDIAN */
 
 /* Define to 1 if your processor stores words with the least significant byte
    first (like Intel and VAX, unlike Motorola and SPARC). */
@@ -397,8 +379,3 @@
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 /* #undef size_t */
-
-#if defined(AMIGA) && defined(libnix)
-#include <devices/timer.h>
-#endif
-
