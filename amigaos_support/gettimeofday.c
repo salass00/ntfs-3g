@@ -50,7 +50,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 	tr.tr_node.io_Message.mn_ReplyPort    = &mp;
 	tr.tr_node.io_Message.mn_Length       = sizeof(tr);
 
-	if (OpenDevice("timer.device", UNIT_VBLANK, &tr.tr_node, 0) != 0) {
+	if (OpenDevice((CONST_STRPTR)"timer.device", UNIT_VBLANK, &tr.tr_node, 0) != 0) {
 		errno = ENOMEM;
 		return -1;
 	}
