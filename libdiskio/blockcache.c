@@ -51,9 +51,9 @@ struct BlockCache *InitBlockCache(struct DiskIO *dio) {
 	bc->sector_shift        = dio->sector_shift;
 	bc->write_cache_enabled = dio->write_cache_enabled;
 
-	NEWLIST(&bc->probation_list);
-	NEWLIST(&bc->protected_list);
-	NEWLIST(&bc->dirty_list);
+	NEWMINLIST(&bc->probation_list);
+	NEWMINLIST(&bc->protected_list);
+	NEWMINLIST(&bc->dirty_list);
 
 	bc->mem_handler.is_Node.ln_Type = NT_INTERRUPT;
 	bc->mem_handler.is_Node.ln_Pri  = 50;
@@ -206,7 +206,7 @@ static void MoveMinList(struct MinList *dst, struct MinList *src) {
 		dst->mlh_TailPred = tail;
 		tail->mln_Succ = (struct MinNode *)&dst->mlh_Tail;
 
-		NEWLIST(src);
+		NEWMINLIST(src);
 	}
 }
 
@@ -256,7 +256,7 @@ static struct BlockRangeNode *GetBlockRange(struct BlockCache *bc, UQUAD sector)
 			brn->range.first = sector;
 			brn->range.last  = sector;
 
-			NEWLIST(&brn->list);
+			NEWMINLIST(&brn->list);
 
 			InsertSplay(&bc->range_tree, RangeTreeCompareFunc, &brn->splay, &brn->range);
 			AddHead((struct List *)&bc->dirty_list, (struct Node *)&brn->node);
@@ -414,7 +414,7 @@ static struct BlockRangeNode *SplitBlockRange(struct BlockCache *bc, struct Bloc
 		brn2->range.first = bcn->sector + 1;
 		brn2->range.last  = brn1->range.last;
 
-		NEWLIST(&brn2->list);
+		NEWMINLIST(&brn2->list);
 
 		/* Need to update the range_node pointers. */
 		for (node = bcn->node.mln_Succ; (succ = node->mln_Succ) != NULL; node = succ) {

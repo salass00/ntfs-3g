@@ -40,17 +40,17 @@
 //#define DEBUG
 #define DISABLE_DOSTYPE_CHECK
 
-#ifndef NEWLIST
-#define NEWLIST(list) \
+#ifndef NEWMINLIST
+#define NEWMINLIST(list) \
 	do { \
-		((struct List *)(list))->lh_Head = (struct Node *)&((struct List *)(list))->lh_Tail; \
-		((struct List *)(list))->lh_Tail = NULL; \
-		((struct List *)(list))->lh_TailPred = (struct Node *)&((struct List *)(list))->lh_Head; \
+		(list)->mlh_Head = (struct MinNode *)&(list)->mlh_Tail; \
+		(list)->mlh_Tail = NULL; \
+		(list)->mlh_TailPred = (struct MinNode *)&(list)->mlh_Head; \
 	} while (0)
 #endif
 
 #ifndef IsMinListEmpty
-#define IsMinListEmpty(list) IsListEmpty((struct List *)list)
+#define IsMinListEmpty(list) ((list)->mlh_TailPred == (struct MinNode *)(list))
 #endif
 
 #ifndef TD_READ64

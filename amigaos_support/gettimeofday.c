@@ -26,9 +26,9 @@
 #ifndef NEWLIST
 #define NEWLIST(list) \
 	do { \
-		((struct List *)(list))->lh_Head = (struct Node *)&((struct List *)(list))->lh_Tail; \
-		((struct List *)(list))->lh_Tail = NULL; \
-		((struct List *)(list))->lh_TailPred = (struct Node *)&((struct List *)(list))->lh_Head; \
+		(list)->lh_Head = (struct Node *)&(list)->lh_Tail; \
+		(list)->lh_Tail = NULL; \
+		(list)->lh_TailPred = (struct Node *)&(list)->lh_Head; \
 	} while (0)
 #endif
 
