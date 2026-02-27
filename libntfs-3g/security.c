@@ -4277,10 +4277,12 @@ static int ntfs_default_mapping(struct SECURITY_CONTEXT *scx)
  *		Basic read from a user mapping file on another volume
  */
 
+#if !defined(AMIGA) && !defined(__AROS__)
 static int basicread(void *fileid, char *buf, size_t size, fbx_off_t offs __attribute__((unused)))
 {
 	return (read(*(int*)fileid, buf, size));
 }
+#endif
 
 
 /*
@@ -4313,7 +4315,6 @@ int ntfs_build_mapping(struct SECURITY_CONTEXT *scx, const char *usermap_path,
 	struct MAPPING *usermapping;
 	struct MAPPING *groupmapping;
 	ntfs_inode *ni;
-	int fd;
 	static struct {
 		u8 revision;
 		u8 levels;
@@ -4337,11 +4338,13 @@ int ntfs_build_mapping(struct SECURITY_CONTEXT *scx, const char *usermap_path,
 
 	if (!usermap_path) usermap_path = MAPPINGFILE;
 	if (usermap_path[0] == '/') {
-		fd = open(usermap_path,O_RDONLY);
+#if !defined(AMIGA) && !defined(__AROS__)
+		int fd = open(usermap_path,O_RDONLY);
 		if (fd > 0) {
 			firstitem = ntfs_read_mapping(basicread, (void*)&fd);
 			close(fd);
 		} else
+#endif
 			firstitem = (struct MAPLIST*)NULL;
 	} else {
 		ni = ntfs_pathname_to_inode(scx->vol, NULL, usermap_path);
