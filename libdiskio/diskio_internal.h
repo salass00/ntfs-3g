@@ -250,7 +250,7 @@ AROS_UFP5(int, DiskIOMemHandler,
 	AROS_UFPA(APTR, mask, D1),
 	AROS_UFPA(APTR, custom, A0));
 #else
-SAVEDS ASM int DiskIOMemHandler(
+/*SAVEDS*/ ASM int DiskIOMemHandler(
 	REG(a6, struct ExecBase *SysBase),
 	REG(a0, APTR custom),
 	REG(a1, APTR data));
