@@ -17,12 +17,18 @@ WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable
 
 CFLAGS  = -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
           $(INCLUDES) $(DEFINES) $(WARNINGS)
-LDFLAGS = -s -nostartfiles
+LDFLAGS = -nostartfiles
 LIBS    = -ldebug
 
 ifneq (,$(SYSROOT))
 	CFLAGS  := --sysroot=$(SYSROOT) $(CFLAGS)
 	LDFLAGS := --sysroot=$(SYSROOT) $(LDFLAGS)
+endif
+
+ifneq (,$(findstring -aros,$(HOST)))
+	CPU = $(patsubst %-aros,%,$(HOST))
+else
+	CPU = 68000
 endif
 
 ifeq ($(HOST),m68k-amigaos)
@@ -35,106 +41,144 @@ LIBNTFS3G  = libntfs-3g.a
 LIBDISKIO  = libdiskio.a
 LIBSUPPORT = libamigaos_support.a
 
-LIBNTFS3G_OBJS = \
-	libntfs-3g/bitmap.o \
-	libntfs-3g/misc.o \
-	libntfs-3g/bootsect.o \
-	libntfs-3g/collate.o \
-	libntfs-3g/attrib.o \
-	libntfs-3g/cache.o \
-	libntfs-3g/dir.o \
-	libntfs-3g/ea.o \
-	libntfs-3g/efs.o \
-	libntfs-3g/index.o \
-	libntfs-3g/inode.o \
-	libntfs-3g/acls.o \
-	libntfs-3g/unistr.o \
-	libntfs-3g/runlist.o \
-	libntfs-3g/mst.o \
-	libntfs-3g/mft.o \
-	libntfs-3g/logfile.o \
-	libntfs-3g/lcnalloc.o \
-	libntfs-3g/debug.o \
-	libntfs-3g/device.o \
-	libntfs-3g/volume.o \
-	libntfs-3g/reparse.o \
-	libntfs-3g/object_id.o \
-	libntfs-3g/attrlist.o \
-	libntfs-3g/compress.o \
-	libntfs-3g/logging.o \
-	libntfs-3g/security.o \
-	libntfs-3g/realpath.o \
-	libntfs-3g/xattrs.o \
-	libntfs-3g/compat.o \
-	libntfs-3g/amiga_io.o
+LIBNTFS3G_SRCS = \
+	libntfs-3g/bitmap.c \
+	libntfs-3g/misc.c \
+	libntfs-3g/bootsect.c \
+	libntfs-3g/collate.c \
+	libntfs-3g/attrib.c \
+	libntfs-3g/cache.c \
+	libntfs-3g/dir.c \
+	libntfs-3g/ea.c \
+	libntfs-3g/efs.c \
+	libntfs-3g/index.c \
+	libntfs-3g/inode.c \
+	libntfs-3g/acls.c \
+	libntfs-3g/unistr.c \
+	libntfs-3g/runlist.c \
+	libntfs-3g/mst.c \
+	libntfs-3g/mft.c \
+	libntfs-3g/logfile.c \
+	libntfs-3g/lcnalloc.c \
+	libntfs-3g/debug.c \
+	libntfs-3g/device.c \
+	libntfs-3g/volume.c \
+	libntfs-3g/reparse.c \
+	libntfs-3g/object_id.c \
+	libntfs-3g/attrlist.c \
+	libntfs-3g/compress.c \
+	libntfs-3g/logging.c \
+	libntfs-3g/security.c \
+	libntfs-3g/realpath.c \
+	libntfs-3g/xattrs.c \
+	libntfs-3g/compat.c \
+	libntfs-3g/amiga_io.c
 
-LIBDISKIO_OBJS = \
-	libdiskio/setup.o \
-	libdiskio/cleanup.o \
-	libdiskio/update.o \
-	libdiskio/query.o \
-	libdiskio/readbytes.o \
-	libdiskio/writebytes.o \
-	libdiskio/flushiocache.o \
-	libdiskio/deviceio.o \
-	libdiskio/cachedio.o \
-	libdiskio/blockcache.o \
-	libdiskio/memhandler.o \
-	libdiskio/splay.o
+LIBDISKIO_SRCS = \
+	libdiskio/setup.c \
+	libdiskio/cleanup.c \
+	libdiskio/update.c \
+	libdiskio/query.c \
+	libdiskio/readbytes.c \
+	libdiskio/writebytes.c \
+	libdiskio/flushiocache.c \
+	libdiskio/deviceio.c \
+	libdiskio/cachedio.c \
+	libdiskio/blockcache.c \
+	libdiskio/memhandler.c \
+	libdiskio/splay.c
 
-LIBSUPPORT_OBJS = \
-	amigaos_support/debugf.o \
-	amigaos_support/gettimeofday.o \
-	amigaos_support/kputstr.o \
-	amigaos_support/malloc.o \
-	amigaos_support/printf.o \
-	amigaos_support/random.o \
-	amigaos_support/snprintf.o \
-	amigaos_support/strdup.o \
-	amigaos_support/strlcpy.o \
-	amigaos_support/syslog.o
+LIBSUPPORT_SRCS = \
+	amigaos_support/debugf.c \
+	amigaos_support/gettimeofday.c \
+	amigaos_support/kputstr.c \
+	amigaos_support/malloc.c \
+	amigaos_support/printf.c \
+	amigaos_support/random.c \
+	amigaos_support/snprintf.c \
+	amigaos_support/strdup.c \
+	amigaos_support/strlcpy.c \
+	amigaos_support/syslog.c
 
-STARTOBJ = \
-	src/ntfs3g-startup_amigaos.o
+SRCS = \
+	src/ntfs3g-startup_amigaos.c \
+	src/ntfs-3g.c \
+	src/ntfs-3g_common.c \
+	src/ntfs-3g_amigaos.c \
+	ntfsprogs/utils.c \
+	ntfsprogs/sd.c \
+	ntfsprogs/boot.c \
+	ntfsprogs/attrdef.c
 
-OBJS = \
-	src/ntfs-3g.o \
-	src/ntfs-3g_common.o \
-	src/ntfs-3g_amigaos.o \
-	ntfsprogs/utils.o \
-	ntfsprogs/sd.o \
-	ntfsprogs/boot.o \
-	ntfsprogs/attrdef.o
+LIBNTFS3G_OBJS = $(addprefix obj/$(CPU)/,$(LIBNTFS3G_SRCS:.c=.o))
+LIBDISKIO_OBJS = $(addprefix obj/$(CPU)/,$(LIBDISKIO_SRCS:.c=.o))
+LIBSUPPORT_OBJS = $(addprefix obj/$(CPU)/,$(LIBSUPPORT_SRCS:.c=.o))
+OBJS = $(addprefix obj/$(CPU)/,$(SRCS:.c=.o))
+
+DEPS = $(LIBNTFS3G_OBJS:.o=.d) \
+       $(LIBDISKIO_OBJS:.o=.d) \
+       $(LIBSUPPORT_OBJS:.o=.d) \
+       $(OBJS:.o=.d)
 
 .PHONY: all
-all: $(TARGET)
+all: bin/$(TARGET).$(CPU) bin/$(TARGET).$(CPU).debug
 
-$(LIBNTFS3G): $(LIBNTFS3G_OBJS)
+-include $(DEPS)
+
+obj/$(CPU)/libntfs-3g/%.o: libntfs-3g/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+obj/$(CPU)/libdiskio/%.o: libdiskio/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+obj/$(CPU)/amigaos_support/%.o: amigaos_support/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+obj/$(CPU)/src/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+obj/$(CPU)/ntfsprogs/%.o: ntfsprogs/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+bin/$(LIBNTFS3G).$(CPU): $(LIBNTFS3G_OBJS)
+	@mkdir -p $(dir $@)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
 
-$(LIBDISKIO): $(LIBDISKIO_OBJS)
+bin/$(LIBDISKIO).$(CPU): $(LIBDISKIO_OBJS)
+	@mkdir -p $(dir $@)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
 
-amigaos_support/malloc.o: CFLAGS += -fno-builtin
+obj/$(CPU)/amigaos_support/malloc.o: CFLAGS += -fno-builtin
 
-$(LIBSUPPORT): $(LIBSUPPORT_OBJS)
+bin/$(LIBSUPPORT).$(CPU): $(LIBSUPPORT_OBJS)
+	@mkdir -p $(dir $@)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
 
-$(STARTOBJ): $(TARGET)_rev.h
-
-$(TARGET): $(STARTOBJ) $(OBJS) $(LIBNTFS3G) $(LIBDISKIO) $(LIBSUPPORT)
+bin/$(TARGET).$(CPU).debug: $(OBJS) bin/$(LIBNTFS3G).$(CPU) bin/$(LIBDISKIO).$(CPU) bin/$(LIBSUPPORT).$(CPU)
+	@mkdir -p $(dir $@)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+bin/$(TARGET).$(CPU): $(OBJS) bin/$(LIBNTFS3G).$(CPU) bin/$(LIBDISKIO).$(CPU) bin/$(LIBSUPPORT).$(CPU)
+	@mkdir -p $(dir $@)
+	$(CC) -s $(LDFLAGS) -o $@ $^ $(LIBS)
+
 
 .PHONY: clean
 clean:
-	$(RM) $(TARGET) $(LIBNTFS3G) $(LIBDISKIO) $(LIBSUPPORT) */*.o
-
-.PHONY: dist-clean
-dist-clean:
-	$(RM) $(LIBNTFS3G) $(LIBDISKIO) $(LIBSUPPORT) */*.o
+	rm -rf bin obj
 
 .PHONY: revision
 revision:

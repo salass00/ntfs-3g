@@ -1,7 +1,7 @@
 # Ignore object and archive files
 *.[oa]
 # Ignore generated exe files
-ntfs3g-handler
-NTFileSystem3G
+bin
+obj
 # Ignore release archives
 *.7z
