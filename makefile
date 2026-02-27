@@ -19,14 +19,16 @@ WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable \
 CFLAGS  = -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
           $(INCLUDES) $(DEFINES) $(WARNINGS)
 LDFLAGS = -nostartfiles
-LIBS    = -ldebug
+LIBS    =
 
 ifneq (,$(findstring -aros,$(HOST)))
 	CPU = $(patsubst %-aros,%,$(HOST))
 	INCLUDES += -I./include/aros
+	LIBS += -ldebug
 else
 	CPU = 68000
 	INCLUDES += -I./include/amigaos3
+	LIBS += -lm
 endif
 
 ifneq (,$(SYSROOT))
@@ -37,7 +39,6 @@ endif
 ifeq ($(HOST),m68k-amigaos)
 	CFLAGS  := -noixemul $(CFLAGS)
 	LDFLAGS := -noixemul $(LDFLAGS)
-	LIBS =
 endif
 
 LIBNTFS3G  = libntfs-3g.a
