@@ -1256,6 +1256,8 @@ static BOOL groupmember(struct SECURITY_CONTEXT *scx, uid_t uid, gid_t gid)
 
 static BOOL groupmember(struct SECURITY_CONTEXT *scx, uid_t uid, gid_t gid)
 {
+	BOOL ismember;
+#if !defined(AMIGA) && !defined(__AROS__)
 	static char key[] = "\nGroups:";
 	char buf[BUFSZ+1];
 	char filename[64];
@@ -1263,16 +1265,17 @@ static BOOL groupmember(struct SECURITY_CONTEXT *scx, uid_t uid, gid_t gid)
 	int fd;
 	char c;
 	int matched;
-	BOOL ismember;
 	int got;
 	char *p;
 	gid_t grp;
 	pid_t tid;
+#endif
 
 	if (scx->vol->secure_flags & (1 << SECURITY_STATICGRPS))
 		ismember = staticgroupmember(scx, uid, gid);
 	else {
 		ismember = FALSE; /* default return */
+#if !defined(AMIGA) && !defined(__AROS__)
 		tid = scx->tid;
 		snprintf(filename,sizeof(filename),"/proc/%u/task/%u/status",(unsigned)tid,(unsigned)tid);
 		fd = open(filename,O_RDONLY);
@@ -1334,6 +1337,7 @@ static BOOL groupmember(struct SECURITY_CONTEXT *scx, uid_t uid, gid_t gid)
 			ntfs_log_error("No group record found in %s\n",filename);
 		} else
 			ntfs_log_error("Could not open %s\n",filename);
+#endif
 	}
 	return (ismember);
 }
