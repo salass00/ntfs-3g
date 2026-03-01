@@ -1,45 +1,25 @@
-HOST ?= i386-aros
+CC     = m68k-amigaos-gcc
+STRIP  = m68k-amigaos-strip
+AR     = m68k-amigaos-ar
+RANLIB = m68k-amigaos-ranlib
 
-CC     = $(HOST)-gcc
-AR     = $(HOST)-ar
-RANLIB = $(HOST)-ranlib
-
-ifeq ($(HOST),m68k-amigaos)
-	TARGET = NTFileSystem3G
-else
-	TARGET = ntfs3g-handler
-endif
+TARGET  = NTFileSystem3G
 VERSION = 53
 
-INCLUDES = -I. -I./include/ntfs-3g -I./src -I./libdiskio -I./amigaos_support/include
-DEFINES  = -DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8 #-DDEBUG
-WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable \
-           -Wno-address-of-packed-member -Wno-zero-length-bounds
+INCLUDES = -I. -I./include/ntfs-3g -I./include/amigaos3 -I./src -I./libdiskio -I./amigaos_support/include
+DEFINES  = -DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8
+WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable
 
-CFLAGS  = -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
+CFLAGS  = -noixemul -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
           $(INCLUDES) $(DEFINES) $(WARNINGS)
-LDFLAGS = -nostartfiles
-LIBS    =
+LDFLAGS = -noixemul -g -nostartfiles
+LIBS    = -lm
 
-ifneq (,$(findstring -aros,$(HOST)))
-	CPU = $(patsubst %-aros,%,$(HOST))
-	INCLUDES += -I./include/aros
-	LIBS += -ldebug
-else
-	CPU = 68000
-	INCLUDES += -I./include/amigaos3
-	LIBS += -lm
-endif
+STRIPFLAGS = -R.comment
 
-ifneq (,$(SYSROOT))
-	CFLAGS  := --sysroot=$(SYSROOT) $(CFLAGS)
-	LDFLAGS := --sysroot=$(SYSROOT) $(LDFLAGS)
-endif
-
-ifeq ($(HOST),m68k-amigaos)
-	CFLAGS  := -noixemul $(CFLAGS)
-	LDFLAGS := -noixemul $(LDFLAGS)
-endif
+ARCH_000 = -mcpu=68000 -mtune=68000
+ARCH_020 = -mcpu=68020 -mtune=68020-60
+ARCH_060 = -mcpu=68060 -mtune=68060
 
 LIBNTFS3G  = libntfs-3g.a
 LIBDISKIO  = libdiskio.a
@@ -115,71 +95,180 @@ SRCS = \
 	ntfsprogs/boot.c \
 	ntfsprogs/attrdef.c
 
-LIBNTFS3G_OBJS = $(addprefix obj/$(CPU)/,$(LIBNTFS3G_SRCS:.c=.o))
-LIBDISKIO_OBJS = $(addprefix obj/$(CPU)/,$(LIBDISKIO_SRCS:.c=.o))
-LIBSUPPORT_OBJS = $(addprefix obj/$(CPU)/,$(LIBSUPPORT_SRCS:.c=.o))
-OBJS = $(addprefix obj/$(CPU)/,$(SRCS:.c=.o))
+LIBNTFS3G_OBJS_000 = $(addprefix obj/68000/,$(LIBNTFS3G_SRCS:.c=.o))
+LIBDISKIO_OBJS_000 = $(addprefix obj/68000/,$(LIBDISKIO_SRCS:.c=.o))
+LIBSUPPORT_OBJS_000 = $(addprefix obj/68000/,$(LIBSUPPORT_SRCS:.c=.o))
+OBJS_000 = $(addprefix obj/68000/,$(SRCS:.c=.o))
+DEPS_000 = $(LIBNTFS3G_OBJS_000:.o=.d) \
+           $(LIBDISKIO_OBJS_000:.o=.d) \
+           $(LIBSUPPORT_OBJS_000:.o=.d) \
+           $(OBJS_000:.o=.d)
 
-DEPS = $(LIBNTFS3G_OBJS:.o=.d) \
-       $(LIBDISKIO_OBJS:.o=.d) \
-       $(LIBSUPPORT_OBJS:.o=.d) \
-       $(OBJS:.o=.d)
+LIBNTFS3G_OBJS_020 = $(addprefix obj/68020/,$(LIBNTFS3G_SRCS:.c=.o))
+LIBDISKIO_OBJS_020 = $(addprefix obj/68020/,$(LIBDISKIO_SRCS:.c=.o))
+LIBSUPPORT_OBJS_020 = $(addprefix obj/68020/,$(LIBSUPPORT_SRCS:.c=.o))
+OBJS_020 = $(addprefix obj/68020/,$(SRCS:.c=.o))
+DEPS_020 = $(LIBNTFS3G_OBJS_020:.o=.d) \
+           $(LIBDISKIO_OBJS_020:.o=.d) \
+           $(LIBSUPPORT_OBJS_020:.o=.d) \
+           $(OBJS_020:.o=.d)
+
+LIBNTFS3G_OBJS_060 = $(addprefix obj/68060/,$(LIBNTFS3G_SRCS:.c=.o))
+LIBDISKIO_OBJS_060 = $(addprefix obj/68060/,$(LIBDISKIO_SRCS:.c=.o))
+LIBSUPPORT_OBJS_060 = $(addprefix obj/68060/,$(LIBSUPPORT_SRCS:.c=.o))
+OBJS_060 = $(addprefix obj/68060/,$(SRCS:.c=.o))
+DEPS_060 = $(LIBNTFS3G_OBJS_060:.o=.d) \
+           $(LIBDISKIO_OBJS_060:.o=.d) \
+           $(LIBSUPPORT_OBJS_060:.o=.d) \
+           $(OBJS_060:.o=.d)
 
 .PHONY: all
-all: bin/$(TARGET).$(CPU) bin/$(TARGET).$(CPU).debug
+all: bin/$(TARGET).000 bin/$(TARGET).020 bin/$(TARGET).060
 
--include $(DEPS)
+-include $(DEPS_000)
+-include $(DEPS_020)
+-include $(DEPS_060)
 
-obj/$(CPU)/libntfs-3g/%.o: libntfs-3g/%.c
+obj/68000/libntfs-3g/%.o: libntfs-3g/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
+	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
 
-obj/$(CPU)/libdiskio/%.o: libdiskio/%.c
+obj/68020/libntfs-3g/%.o: libntfs-3g/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
+	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
 
-obj/$(CPU)/amigaos_support/%.o: amigaos_support/%.c
+obj/68060/libntfs-3g/%.o: libntfs-3g/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
+	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
 
-obj/$(CPU)/src/%.o: src/%.c
+obj/68000/libdiskio/%.o: libdiskio/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
+	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
 
-obj/$(CPU)/ntfsprogs/%.o: ntfsprogs/%.c
+obj/68020/libdiskio/%.o: libdiskio/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
+	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
 
-bin/$(LIBNTFS3G).$(CPU): $(LIBNTFS3G_OBJS)
+obj/68060/libdiskio/%.o: libdiskio/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
+	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
+
+obj/68000/amigaos_support/%.o: amigaos_support/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
+	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
+
+obj/68020/amigaos_support/%.o: amigaos_support/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
+	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
+
+obj/68060/amigaos_support/%.o: amigaos_support/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
+	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
+
+obj/68000/src/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
+	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
+
+obj/68020/src/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
+	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
+
+obj/68060/src/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
+	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
+
+obj/68000/ntfsprogs/%.o: ntfsprogs/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
+	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
+
+obj/68020/ntfsprogs/%.o: ntfsprogs/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
+	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
+
+obj/68060/ntfsprogs/%.o: ntfsprogs/%.c
+	@mkdir -p $(dir $@)
+	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
+	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
+
+bin/$(LIBNTFS3G).000: $(LIBNTFS3G_OBJS_000)
 	@mkdir -p $(dir $@)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
 
-bin/$(LIBDISKIO).$(CPU): $(LIBDISKIO_OBJS)
+bin/$(LIBNTFS3G).020: $(LIBNTFS3G_OBJS_020)
 	@mkdir -p $(dir $@)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
 
-obj/$(CPU)/amigaos_support/malloc.o: CFLAGS += -fno-builtin
-
-bin/$(LIBSUPPORT).$(CPU): $(LIBSUPPORT_OBJS)
+bin/$(LIBNTFS3G).060: $(LIBNTFS3G_OBJS_060)
 	@mkdir -p $(dir $@)
 	$(AR) -crv $@ $^
 	$(RANLIB) $@
 
-bin/$(TARGET).$(CPU).debug: $(OBJS) bin/$(LIBNTFS3G).$(CPU) bin/$(LIBDISKIO).$(CPU) bin/$(LIBSUPPORT).$(CPU)
+bin/$(LIBDISKIO).000: $(LIBDISKIO_OBJS_000)
 	@mkdir -p $(dir $@)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
+	$(AR) -crv $@ $^
+	$(RANLIB) $@
 
-bin/$(TARGET).$(CPU): $(OBJS) bin/$(LIBNTFS3G).$(CPU) bin/$(LIBDISKIO).$(CPU) bin/$(LIBSUPPORT).$(CPU)
+bin/$(LIBDISKIO).020: $(LIBDISKIO_OBJS_020)
 	@mkdir -p $(dir $@)
-	$(CC) -s $(LDFLAGS) -o $@ $^ $(LIBS)
+	$(AR) -crv $@ $^
+	$(RANLIB) $@
 
+bin/$(LIBDISKIO).060: $(LIBDISKIO_OBJS_060)
+	@mkdir -p $(dir $@)
+	$(AR) -crv $@ $^
+	$(RANLIB) $@
+
+bin/$(LIBSUPPORT).000: $(LIBSUPPORT_OBJS_000)
+	@mkdir -p $(dir $@)
+	$(AR) -crv $@ $^
+	$(RANLIB) $@
+
+bin/$(LIBSUPPORT).020: $(LIBSUPPORT_OBJS_020)
+	@mkdir -p $(dir $@)
+	$(AR) -crv $@ $^
+	$(RANLIB) $@
+
+bin/$(LIBSUPPORT).060: $(LIBSUPPORT_OBJS_060)
+	@mkdir -p $(dir $@)
+	$(AR) -crv $@ $^
+	$(RANLIB) $@
+
+bin/$(TARGET).000.debug: $(OBJS_000) bin/$(LIBNTFS3G).000 bin/$(LIBDISKIO).000 bin/$(LIBSUPPORT).000
+	@mkdir -p $(dir $@)
+	$(CC) $(ARCH_000) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+bin/$(TARGET).020.debug: $(OBJS_020) bin/$(LIBNTFS3G).020 bin/$(LIBDISKIO).020 bin/$(LIBSUPPORT).020
+	@mkdir -p $(dir $@)
+	$(CC) $(ARCH_020) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+bin/$(TARGET).060.debug: $(OBJS_060) bin/$(LIBNTFS3G).060 bin/$(LIBDISKIO).060 bin/$(LIBSUPPORT).060
+	@mkdir -p $(dir $@)
+	$(CC) $(ARCH_060) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+bin/$(TARGET).000: bin/$(TARGET).000.debug
+	$(STRIP) $(STRIPFLAGS) -o $@ $<
+
+bin/$(TARGET).020: bin/$(TARGET).020.debug
+	$(STRIP) $(STRIPFLAGS) -o $@ $<
+
+bin/$(TARGET).060: bin/$(TARGET).060.debug
+	$(STRIP) $(STRIPFLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
