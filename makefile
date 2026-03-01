@@ -174,6 +174,8 @@ obj/68060/amigaos_support/%.o: amigaos_support/%.c
 	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
 	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
 
+obj/%/amigaos_support/malloc.o: CFLAGS += -fno-builtin
+
 obj/68000/src/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
