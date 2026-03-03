@@ -23,3 +23,10 @@ ntfs3g-handler 53.4 (3.2.2016)
 - Replaced cache semaphore with a simple boolean variable that indicates to
   the memhandler when the cache is being accessed.
 
+
+ntfs3g-handler 53.5 (d.m.2026)
+
+- Added missing strdup() function in amigaos_support.
+
+- Now supports AmigaOS 3 and x86_64-AROS.
+
