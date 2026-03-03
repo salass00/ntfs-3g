@@ -24,7 +24,7 @@ ntfs3g-handler 53.4 (3.2.2016)
   the memhandler when the cache is being accessed.
 
 
-ntfs3g-handler 53.5 (d.m.2026)
+ntfs3g-handler 53.5 (3.3.2026)
 
 - Added missing strdup() function in amigaos_support.
 
