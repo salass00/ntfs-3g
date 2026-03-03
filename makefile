@@ -278,6 +278,6 @@ clean:
 
 .PHONY: revision
 revision:
-	bumprev $(VERSION) NTFileSystem3G
-	bumprev $(VERSION) ntfs3g-handler
+	bumprev -e is $(VERSION) NTFileSystem3G
+	bumprev -e is $(VERSION) ntfs3g-handler
 
