@@ -23,7 +23,7 @@ Usage:
 When creating a DOSDriver or Mountlist entry for an NTFS partition make sure
 that the FileSystem and Handler are set as follows:
 
-FileSystem     = ntfs3g-handler
+FileSystem     = L:ntfs3g-handler
 DosType        = 0x4e544653
 
 Also to make a read-only mount you can set:

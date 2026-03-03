@@ -6,7 +6,7 @@
  *
  * - Control can be specified with the ro option for a read-only mount.
  */
-FileSystem     = ntfs3g-handler
+FileSystem     = L:ntfs3g-handler
 DosType        = 0x4e544653
 Device         = usbscsi.device
 Unit           = 0
