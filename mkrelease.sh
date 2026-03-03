@@ -21,13 +21,17 @@ cp -p COPYING ${DESTDIR}/ntfs3g
 cp -p releasenotes ${DESTDIR}/ntfs3g
 
 if [ "$HOST" = "m68k-amigaos" ]; then
+  cp -p Install ${DESTDIR}/ntfs3g
   cp -p README ${DESTDIR}/ntfs3g
   cp -p bin/NTFileSystem3G.000 ${DESTDIR}/ntfs3g/L
   cp -p bin/NTFileSystem3G.020 ${DESTDIR}/ntfs3g/L
   cp -p bin/NTFileSystem3G.060 ${DESTDIR}/ntfs3g/L
+  cp -p icons/def_install.info ${DESTDIR}/ntfs3g/Install.info
 else
+  cp -p Install-AROS ${DESTDIR}/ntfs3g/Install
   cp -p README-AROS ${DESTDIR}/ntfs3g/README
   cp -p bin/ntfs3g-handler.${CPU} ${DESTDIR}/ntfs3g/L/ntfs3g-handler
+  cp -p icons/def_install-AROS.info ${DESTDIR}/ntfs3g/Install.info
 fi;
 
 cp -p icons/def_drawer.info ${DESTDIR}/ntfs3g.info

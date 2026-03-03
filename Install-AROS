@@ -1,0 +1,9 @@
+(welcome)
+(set @default-dest "SYS:")
+(copylib
+	(prompt "Copying ntfs3g-handler")
+	(help @copylib-help)
+	(source "L/ntfs3g-handler")
+	(dest "L:")
+)
+(exit)
