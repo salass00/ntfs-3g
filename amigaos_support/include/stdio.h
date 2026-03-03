@@ -30,8 +30,8 @@ int my_fprintf(FILE *s, const char *fmt, ...);
 
 #define vprintf(fmt,args)      my_vprintf(fmt, args)
 #define printf(fmt,args...)    my_printf(fmt, ## args)
-#define vfprintf(s,fmt,args)   my_vfprintf(s, fmt, args)
-#define fprintf(s,fmt,args...) my_fprintf(s, fmt, ## args)
+#define vfprintf(s,fmt,args)   my_vprintf(fmt, args)
+#define fprintf(s,fmt,args...) my_printf(fmt, ## args)
 
 #ifndef __AROS__
 int my_vsnprintf(char *buffer, size_t size, const char *fmt, va_list arg);
