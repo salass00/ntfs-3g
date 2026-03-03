@@ -5,3 +5,5 @@ bin
 obj
 # Ignore release archives
 *.7z
+*.iso
+*.lha

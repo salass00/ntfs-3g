@@ -4,6 +4,7 @@
 #
 
 HOST="${1:-m68k-amigaos}"
+FORMAT="${2:-lha}"
 
 if [ "$HOST" = "m68k-amigaos" ]; then
   make all
@@ -40,9 +41,27 @@ cp -p icons/def_doc.info ${DESTDIR}/ntfs3g/README.info
 cp -p icons/def_doc.info ${DESTDIR}/ntfs3g/COPYING.info
 cp -p icons/def_doc.info ${DESTDIR}/ntfs3g/releasenotes.info
 
-rm -f ntfs3g.${HOST}.7z
-7za u ntfs3g.${HOST}.7z ./${DESTDIR}/*
-echo "ntfs3g.${HOST}.7z created"
+case "${FORMAT}" in
+  "7z")
+    rm -f ntfs3g.${HOST}.7z
+    7za u ntfs3g.${HOST}.7z ./${DESTDIR}/*
+    echo "ntfs3g.${HOST}.7z created"
+    ;;
+  "iso")
+    rm -f ntfs3g.${HOST}.iso
+    PREVDIR=`pwd`
+    cd ${DESTDIR} && mkisofs -R -o ../ntfs3g.${HOST}.iso -V NTFS3G .
+    cd ${PREVDIR}
+    echo "ntfs3g.${HOST}.iso created"
+    ;;
+  "lha")
+    rm -rf ntfs3g.${HOST}.lha
+    PREVDIR=`pwd`
+    cd ${DESTDIR} && lha ao5 ../ntfs3g.${HOST}.lha *
+    cd ${PREVDIR}
+    echo "ntfs3g.${HOST}.lha created"
+    ;;
+esac
 
 rm -rf ${DESTDIR}
 
