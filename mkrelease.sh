@@ -3,37 +3,41 @@
 # Script for generating a release archive.
 #
 
-HOST="${1:-i386-aros}"
+HOST="${1:-m68k-amigaos}"
 
-make HOST=${HOST} clean
-
-make HOST=${HOST}
+if [ "$HOST" = "m68k-amigaos" ]; then
+  make all
+else
+  CPU=`echo "${HOST}" | cut -d'-' -f1`
+  make -f makefile.aros CPU=${CPU} all
+fi;
 
 DESTDIR='tmp'
-FULLVERS=`version ntfs3g-handler`
-NUMVERS=`echo "${FULLVERS}" | cut -d' ' -f2`
 
 rm -rf ${DESTDIR}
-mkdir -p ${DESTDIR}/ntfs3g-${NUMVERS}/L
+mkdir -p ${DESTDIR}/ntfs3g/L
 
-cp -p COPYING ${DESTDIR}/ntfs3g-${NUMVERS}
-cp -p releasenotes ${DESTDIR}/ntfs3g-${NUMVERS}
-cp -p ntfs3g-handler ${DESTDIR}/ntfs3g-${NUMVERS}/L
+cp -p COPYING ${DESTDIR}/ntfs3g
+cp -p releasenotes ${DESTDIR}/ntfs3g
 
-echo "Short:        A port of Tuxera's NTFS-3G file system" > ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "Author:       Fredrik Wikstrom" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "Uploader:     Fredrik Wikstrom <fredrik@a500.org>" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "Type:         disk/misc" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "Version:      ${NUMVERS}" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "Requires:     util/libs/filesysbox.${HOST}.lha" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "Architecture: ${HOST}" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-echo "" >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
-cat README >> ${DESTDIR}/ntfs3g-${NUMVERS}/ntfs3g.readme
+if [ "$HOST" = "m68k-amigaos" ]; then
+  cp -p README ${DESTDIR}/ntfs3g
+  cp -p bin/NTFileSystem3G.000 ${DESTDIR}/ntfs3g/L
+  cp -p bin/NTFileSystem3G.020 ${DESTDIR}/ntfs3g/L
+  cp -p bin/NTFileSystem3G.060 ${DESTDIR}/ntfs3g/L
+else
+  cp -p README-AROS ${DESTDIR}/ntfs3g/README
+  cp -p bin/ntfs3g-handler.${CPU} ${DESTDIR}/ntfs3g/L/ntfs3g-handler
+fi;
+
+cp -p icons/def_drawer.info ${DESTDIR}/ntfs3g.info
+cp -p icons/def_doc.info ${DESTDIR}/ntfs3g/README.info
+cp -p icons/def_doc.info ${DESTDIR}/ntfs3g/COPYING.info
+cp -p icons/def_doc.info ${DESTDIR}/ntfs3g/releasenotes.info
 
 rm -f ntfs3g.${HOST}.7z
-7za u ntfs3g.${HOST}.7z ./${DESTDIR}/ntfs3g-${NUMVERS}
+7za u ntfs3g.${HOST}.7z ./${DESTDIR}/*
+echo "ntfs3g.${HOST}.7z created"
 
 rm -rf ${DESTDIR}
-
-echo "ntfs3g.${HOST}.7z created"
 
