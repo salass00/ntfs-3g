@@ -322,6 +322,7 @@ int my_vsnprintf(char *buffer, size_t size, const char *fmt, va_list arg) {
 			}
 		}
 	}
+	putchproc('\0', &putchdata);
 
 	return putchdata.count;
 }

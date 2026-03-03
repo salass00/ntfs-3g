@@ -18,21 +18,20 @@
 
 #include <clib/debug_protos.h>
 
+extern struct Library *SysBase;
+
 #if !defined(__AROS__) && !defined(NODEBUG)
 void KPutStr(CONST_STRPTR str) {
-	__asm__ __volatile__
-	(
-		"move.l 4.w,a6\n\t"
-		"bra.s 2f\n"
-		"1:\n\t"
-		"jsr -516(a6)\n"
-		"2:\n\t"
-		"move.b (%0)+,d0\n\t"
-		"bne.s 1b"
-		:
-		: "a" (str)
-		: "d0", "a6"
-	);
+	TEXT ch;
+	register struct Library *_a6 __asm__("a6") = SysBase;
+	while ((ch = *str++) != '\0') {
+		register char _d0 __asm__("d0") = ch;
+		__asm__("jsr -516(a6)"
+			:
+			: "d" (_d0), "a" (_a6)
+			: "d0", "d1", "a0", "a1", "cc"
+		);
+	}
 }
 #endif
 

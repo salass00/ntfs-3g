@@ -17,17 +17,19 @@ void openlog(const char *ident, int option, int facility) {
 }
 
 void closelog(void) {
-}
-
-static char lastchar(const char *str) {
-	int i = strlen(str) - 1;
-	return i >= 0 ? str[i] : '\0';
+	/* No-op */
 }
 
 void vsyslog(int pri, const char *fmt, void *args) {
 	char buffer[256];
-	vsnprintf(buffer, sizeof(buffer), fmt, args);
-	debugf("%s: %s%s", ms_logident, buffer, lastchar(buffer) == '\n' ? "" : "\n");
+	size_t len;
+	len = vsnprintf(buffer, sizeof(buffer), fmt, args);
+	if (len >= sizeof(buffer))
+		len = sizeof(buffer) - 1;
+	if (len > 0 && buffer[len - 1] == '\n')
+		debugf("%s: %s", ms_logident, buffer);
+	else
+		debugf("%s: %s\n", ms_logident, buffer);
 }
 
 void syslog(int pri, const char *fmt, ...) {
