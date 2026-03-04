@@ -139,7 +139,7 @@ int startup(void)
 
 	pkt = (struct DosPacket *)msg->mn_Node.ln_Name;
 
-	FileSysBoxBase = OpenLibrary(filesysboxName, 54);
+	FileSysBoxBase = OpenLibrary(filesysboxName, 53);
 	if (FileSysBoxBase == NULL)
 	{
 		goto cleanup;
