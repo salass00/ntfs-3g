@@ -10,8 +10,7 @@ INCLUDES = -I. -I./include/ntfs-3g -I./include/amigaos3 -I./src -I./libdiskio -I
 DEFINES  = -DHAVE_CONFIG_H -DID_NTFS_DISK=0x4e544653 -DCHAR_BIT=8
 WARNINGS = -Werror -Wall -Wwrite-strings -Wno-unused-const-variable
 
-CFLAGS  = -noixemul -O2 -g -fomit-frame-pointer -fno-builtin-printf -fno-builtin-fprintf \
-          $(INCLUDES) $(DEFINES) $(WARNINGS)
+CFLAGS  = -noixemul -O2 -g -fomit-frame-pointer $(INCLUDES) $(DEFINES) $(WARNINGS)
 LDFLAGS = -noixemul -g -nostartfiles
 LIBS    = -lm
 
