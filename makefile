@@ -129,82 +129,22 @@ all: bin/$(TARGET).000 bin/$(TARGET).020 bin/$(TARGET).060
 -include $(DEPS_020)
 -include $(DEPS_060)
 
-obj/68000/libntfs-3g/%.o: libntfs-3g/%.c
+obj/68000/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
 	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
 
-obj/68020/libntfs-3g/%.o: libntfs-3g/%.c
+obj/68020/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
 	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
 
-obj/68060/libntfs-3g/%.o: libntfs-3g/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
-	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
-
-obj/68000/libdiskio/%.o: libdiskio/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
-	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
-
-obj/68020/libdiskio/%.o: libdiskio/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
-	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
-
-obj/68060/libdiskio/%.o: libdiskio/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
-	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
-
-obj/68000/amigaos_support/%.o: amigaos_support/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
-	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
-
-obj/68020/amigaos_support/%.o: amigaos_support/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
-	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
-
-obj/68060/amigaos_support/%.o: amigaos_support/%.c
+obj/68060/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
 	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
 
 obj/%/amigaos_support/malloc.o: CFLAGS += -fno-builtin
-
-obj/68000/src/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
-	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
-
-obj/68020/src/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
-	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
-
-obj/68060/src/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
-	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
-
-obj/68000/ntfsprogs/%.o: ntfsprogs/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_000) $(CFLAGS) $<
-	$(CC) $(ARCH_000) $(CFLAGS) -c -o $@ $<
-
-obj/68020/ntfsprogs/%.o: ntfsprogs/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_020) $(CFLAGS) $<
-	$(CC) $(ARCH_020) $(CFLAGS) -c -o $@ $<
-
-obj/68060/ntfsprogs/%.o: ntfsprogs/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(ARCH_060) $(CFLAGS) $<
-	$(CC) $(ARCH_060) $(CFLAGS) -c -o $@ $<
 
 bin/$(LIBNTFS3G).000: $(LIBNTFS3G_OBJS_000)
 	@mkdir -p $(dir $@)

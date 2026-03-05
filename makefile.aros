@@ -112,32 +112,12 @@ all: bin/$(TARGET).$(CPU) bin/$(TARGET).$(CPU).debug
 
 -include $(DEPS)
 
-obj/$(CPU)/libntfs-3g/%.o: libntfs-3g/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-obj/$(CPU)/libdiskio/%.o: libdiskio/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-obj/$(CPU)/amigaos_support/%.o: amigaos_support/%.c
+obj/$(CPU)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 obj/$(CPU)/amigaos_support/malloc.o: CFLAGS += -fno-builtin
-
-obj/$(CPU)/src/%.o: src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-obj/$(CPU)/ntfsprogs/%.o: ntfsprogs/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -MM -MP -MT $(@:.o=.d) -MT $@ -MF $(@:.o=.d) $(CFLAGS) $<
-	$(CC) $(CFLAGS) -c -o $@ $<
 
 bin/$(LIBNTFS3G).$(CPU): $(LIBNTFS3G_OBJS)
 	@mkdir -p $(dir $@)
@@ -161,7 +141,6 @@ bin/$(TARGET).$(CPU).debug: $(OBJS) bin/$(LIBNTFS3G).$(CPU) bin/$(LIBDISKIO).$(C
 bin/$(TARGET).$(CPU): $(OBJS) bin/$(LIBNTFS3G).$(CPU) bin/$(LIBDISKIO).$(CPU) bin/$(LIBSUPPORT).$(CPU)
 	@mkdir -p $(dir $@)
 	$(CC) -s $(LDFLAGS) -o $@ $^ $(LIBS)
-
 
 .PHONY: clean
 clean:
