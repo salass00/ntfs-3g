@@ -180,20 +180,29 @@ struct DiskIO *DIO_Setup(CONST_STRPTR name, const struct TagItem *tags) {
 			UWORD cmd;
 			int i = 0;
 			while ((cmd = nsdqr.SupportedCommands[i++]) != CMD_INVALID) {
-				if (cmd == CMD_READ)
-					dio->cmd_support |= CMDSF_TD32;
-				else if (cmd == ETD_READ)
-					dio->cmd_support |= CMDSF_ETD32;
-				else if (cmd == TD_READ64)
-					dio->cmd_support |= CMDSF_TD64;
-				else if (cmd == NSCMD_TD_READ64)
-					dio->cmd_support |= CMDSF_NSD_TD64;
-				else if (cmd == NSCMD_ETD_READ64)
-					dio->cmd_support |= CMDSF_NSD_ETD64;
-				else if (cmd == CMD_UPDATE)
-					dio->cmd_support |= CMDSF_CMD_UPDATE;
-				else if (cmd == ETD_UPDATE)
-					dio->cmd_support |= CMDSF_ETD_UPDATE;
+				switch (cmd) {
+					case CMD_READ:
+						dio->cmd_support |= CMDSF_TD32;
+						break;
+					case ETD_READ:
+						dio->cmd_support |= CMDSF_ETD32;
+						break;
+					case TD_READ64:
+						dio->cmd_support |= CMDSF_TD64;
+						break;
+					case NSCMD_TD_READ64:
+						dio->cmd_support |= CMDSF_NSD_TD64;
+						break;
+					case NSCMD_ETD_READ64:
+						dio->cmd_support |= CMDSF_NSD_ETD64;
+						break;
+					case CMD_UPDATE:
+						dio->cmd_support |= CMDSF_CMD_UPDATE;
+						break;
+					case ETD_UPDATE:
+						dio->cmd_support |= CMDSF_ETD_UPDATE;
+						break;
+				}
 			}
 		}
 	} else if (iotd->iotd_Req.io_Error == IOERR_NOCMD) {
